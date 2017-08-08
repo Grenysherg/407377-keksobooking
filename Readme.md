@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Елизавета Филонова](https://up.htmlacademy.ru/javascript/10/user/407377).
-* Наставник: `Неизвестно`.
+* Наставник: [Вячеслав Ульянич](https://up.htmlacademy.ru/javascript/10/user/158443).
 
 ---
 
