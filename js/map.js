@@ -2,18 +2,28 @@
 
 var RUBLE_SIGN = String.fromCharCode(8381);
 
-var avatar = {};
-avatar.NUMBER_MIN = 1;
+var pinMap = document.querySelector('.tokyo__pin-map');
+var pinTemplate = document.querySelector('#pin-template').content;
+var pinTemplateImg = pinTemplate.querySelector('.rounded');
 
-var locationX = {};
-locationX.MIN = 300;
-locationX.MAX = 900;
+var offerDialog = document.querySelector('#offer-dialog');
+var offerDialogPanel = offerDialog.querySelector('.dialog__panel');
+var lodgeTemplate = document.querySelector('#lodge-template').content;
 
-var locationY = {};
-locationY.MIN = 100;
-locationY.MAX = 500;
+var advertParameters = {};
 
-var TITLES = [
+advertParameters.avatar = {};
+advertParameters.avatar.NUMBER_MIN = 1;
+
+advertParameters.locationX = {};
+advertParameters.locationX.MIN = 300;
+advertParameters.locationX.MAX = 900;
+
+advertParameters.locationY = {};
+advertParameters.locationY.MIN = 100;
+advertParameters.locationY.MAX = 500;
+
+advertParameters.TITLES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -24,36 +34,28 @@ var TITLES = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var price = {};
-price.MIN = 1000;
-price.MAX = 1000000;
+advertParameters.price = {};
+advertParameters.price.MIN = 1000;
+advertParameters.price.MAX = 1000000;
 
-var TYPES = {'flat': 'Квартира', 'house': 'Дом', 'bungalo': 'Бунгало'};
+advertParameters.TYPES = {'flat': 'Квартира', 'house': 'Дом', 'bungalo': 'Бунгало'};
 
-var room = {};
-room.MIN = 1;
-room.MAX = 5;
+advertParameters.room = {};
+advertParameters.room.MIN = 1;
+advertParameters.room.MAX = 5;
 
-var guest = {};
-guest.MIN = 1;
+advertParameters.guest = {};
+advertParameters.guest.MIN = 1;
 
-var CHECKIN_TIME = ['12:00', '13:00', '14:00'];
+advertParameters.CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 
-var CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
+advertParameters.CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 
-var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+advertParameters.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-var pinMap = document.querySelector('.tokyo__pin-map');
-var pinTemplate = document.querySelector('#pin-template').content;
-var pinTemplateImg = pinTemplate.querySelector('.rounded');
-
-var pin = {};
-pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
-pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
-
-var offerDialog = document.querySelector('#offer-dialog');
-var offerDialogPanel = offerDialog.querySelector('.dialog__panel');
-var lodgeTemplate = document.querySelector('#lodge-template').content;
+advertParameters.pin = {};
+advertParameters.pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
+advertParameters.pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
 
 var createAdvertElement = function (avatarNumber, offerTitle) {
   var advertElement = {};
@@ -62,19 +64,19 @@ var createAdvertElement = function (avatarNumber, offerTitle) {
   advertElement.author.avatar = 'img/avatars/user' + avatarNumber + '.png';
 
   advertElement.location = {};
-  advertElement.location.x = createRandomInteger(locationX.MIN, locationX.MAX);
-  advertElement.location.y = createRandomInteger(locationY.MIN, locationY.MAX);
+  advertElement.location.x = createRandomInteger(advertParameters.locationX.MIN, advertParameters.locationX.MAX);
+  advertElement.location.y = createRandomInteger(advertParameters.locationY.MIN, advertParameters.locationY.MAX);
 
   advertElement.offer = {};
   advertElement.offer.title = offerTitle;
   advertElement.offer.address = advertElement.location.x + ', ' + advertElement.location.y;
-  advertElement.offer.price = createRandomInteger(price.MIN, price.MAX);
-  advertElement.offer.type = returnRandomObjectKey(TYPES);
-  advertElement.offer.rooms = createRandomInteger(room.MIN, room.MAX);
-  advertElement.offer.guests = createRandomInteger(guest.MIN, advertElement.offer.rooms);
-  advertElement.offer.checkin = returnRandomArrayElement(CHECKIN_TIME);
-  advertElement.offer.checkout = returnRandomArrayElement(CHECKOUT_TIME);
-  advertElement.offer.features = returnRandomUniqueArrayElements(FEATURES);
+  advertElement.offer.price = createRandomInteger(advertParameters.price.MIN, advertParameters.price.MAX);
+  advertElement.offer.type = returnRandomObjectKey(advertParameters.TYPES);
+  advertElement.offer.rooms = createRandomInteger(advertParameters.room.MIN, advertParameters.room.MAX);
+  advertElement.offer.guests = createRandomInteger(advertParameters.guest.MIN, advertElement.offer.rooms);
+  advertElement.offer.checkin = returnRandomArrayElement(advertParameters.CHECKIN_TIME);
+  advertElement.offer.checkout = returnRandomArrayElement(advertParameters.CHECKOUT_TIME);
+  advertElement.offer.features = returnRandomUniqueArrayElements(advertParameters.FEATURES);
   advertElement.offer.description = '';
   advertElement.offer.photos = [];
 
@@ -87,7 +89,7 @@ var createOfferDialog = function (advertElement) {
   dialogElement.querySelector('.lodge__title').textContent = advertElement.offer.title;
   dialogElement.querySelector('.lodge__address').textContent = advertElement.offer.address;
   dialogElement.querySelector('.lodge__price').textContent = advertElement.offer.price + RUBLE_SIGN + '/ночь';
-  dialogElement.querySelector('.lodge__type').textContent = TYPES[advertElement.offer.type];
+  dialogElement.querySelector('.lodge__type').textContent = advertParameters.TYPES[advertElement.offer.type];
   dialogElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + advertElement.offer.guests + ' гостей в ' + advertElement.offer.rooms + ' комнатах';
   dialogElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advertElement.offer.checkin + ', выезд до ' + advertElement.offer.checkout;
   dialogElement.querySelector('.lodge__features').appendChild(createOfferDialogFeatures(advertElement.offer.features));
@@ -135,7 +137,7 @@ var createRandomUniqueIntegers = function (min, max, amount) {
 var createPin = function (advertElement) {
   var pinElement = pinTemplate.cloneNode(true);
 
-  pinElement.querySelector('.pin').setAttribute('style', 'left: ' + (advertElement.location.x - pin.WIDTH / 2) + 'px; top: ' + (advertElement.location.y - pin.HEIGHT) + 'px');
+  pinElement.querySelector('.pin').setAttribute('style', 'left: ' + (advertElement.location.x - advertParameters.pin.WIDTH / 2) + 'px; top: ' + (advertElement.location.y - advertParameters.pin.HEIGHT) + 'px');
   pinElement.querySelector('.rounded').setAttribute('src', advertElement.author.avatar);
 
   return pinElement;
@@ -197,8 +199,8 @@ var advert = {};
 advert.AMOUNT = 8;
 advert.values = [];
 advert.createValues = function () {
-  var avatarNumbers = createRandomUniqueIntegers(avatar.NUMBER_MIN, advert.AMOUNT, advert.AMOUNT);
-  var offerTitles = sortArrayElementsRandomOrder(TITLES.concat());
+  var avatarNumbers = createRandomUniqueIntegers(advertParameters.avatar.NUMBER_MIN, advert.AMOUNT, advert.AMOUNT);
+  var offerTitles = sortArrayElementsRandomOrder(advertParameters.TITLES.concat());
 
   for (var i = 0; i < advert.AMOUNT; i++) {
     this.values[i] = createAdvertElement(avatarNumbers.pop(), offerTitles.pop());
