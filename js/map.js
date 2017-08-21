@@ -67,13 +67,13 @@ var createRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var returnRandomObjectKey = function (object) {
+var getRandomObjectKey = function (object) {
   var keys = Object.keys(object);
 
   return keys[createRandomInteger(0, keys.length - 1)];
 };
 
-var returnRandomUniqueArrayElements = function (array, newLength) {
+var getRandomUniqueArrayElements = function (array, newLength) {
   var element;
   var uniqueElements = [];
   var store = {};
@@ -90,23 +90,6 @@ var returnRandomUniqueArrayElements = function (array, newLength) {
   }
 
   return uniqueElements;
-};
-
-var createRandomUniqueIntegers = function (min, max, amount) {
-  var currentInteger;
-  var integers = [];
-  var store = {};
-
-  for (var i = 0; i < amount; i++) {
-    do {
-      currentInteger = createRandomInteger(min, max);
-    } while (store[String(currentInteger)]);
-
-    integers[i] = currentInteger;
-    store[String(currentInteger)] = true;
-  }
-
-  return integers;
 };
 
 var sortArrayElementsRandomOrder = function (array) {
@@ -138,12 +121,12 @@ var createAdvert = function (avatarNumber, offerTitle) {
   advert.offer.title = offerTitle;
   advert.offer.address = advert.location.x + ', ' + advert.location.y;
   advert.offer.price = createRandomInteger(advertParameters.price.MIN, advertParameters.price.MAX);
-  advert.offer.type = returnRandomObjectKey(advertParameters.TYPES);
+  advert.offer.type = getRandomObjectKey(advertParameters.TYPES);
   advert.offer.rooms = createRandomInteger(advertParameters.room.MIN, advertParameters.room.MAX);
   advert.offer.guests = createRandomInteger(advertParameters.guest.MIN, advert.offer.rooms);
   advert.offer.checkin = returnRandomArrayElement(advertParameters.CHECKIN_TIME);
   advert.offer.checkout = returnRandomArrayElement(advertParameters.CHECKOUT_TIME);
-  advert.offer.features = returnRandomUniqueArrayElements(advertParameters.FEATURES);
+  advert.offer.features = getRandomUniqueArrayElements(advertParameters.FEATURES);
   advert.offer.description = '';
   advert.offer.photos = [];
 
@@ -153,11 +136,10 @@ var createAdvert = function (avatarNumber, offerTitle) {
 var createAdverts = function () {
   var adverts = [];
 
-  var avatarNumbers = createRandomUniqueIntegers(advertParameters.avatar.NUMBER_MIN, advertParameters.AMOUNT, advertParameters.AMOUNT);
   var offerTitles = sortArrayElementsRandomOrder(advertParameters.TITLES.concat());
 
   for (var i = 0; i < advertParameters.AMOUNT; i++) {
-    adverts[i] = createAdvert(avatarNumbers[i], offerTitles[i]);
+    adverts[i] = createAdvert(advertParameters.avatar.NUMBER_MIN + i, offerTitles[i]);
   }
 
   return adverts;
