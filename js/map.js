@@ -59,12 +59,12 @@ advertParameters.pin = {};
 advertParameters.pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
 advertParameters.pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
 
-var returnRandomArrayElement = function (array) {
-  return array[createRandomInteger(0, array.length - 1)];
-};
-
 var createRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var getRandomArrayElement = function (array) {
+  return array[createRandomInteger(0, array.length - 1)];
 };
 
 var getRandomObjectKey = function (object) {
@@ -82,7 +82,7 @@ var getRandomUniqueArrayElements = function (array, newLength) {
 
   for (var i = 0; i < newLength; i++) {
     do {
-      element = returnRandomArrayElement(array);
+      element = getRandomArrayElement(array);
     } while (store[String(element)]);
 
     uniqueElements[i] = element;
@@ -124,8 +124,8 @@ var createAdvert = function (avatarNumber, offerTitle) {
   advert.offer.type = getRandomObjectKey(advertParameters.TYPES);
   advert.offer.rooms = createRandomInteger(advertParameters.room.MIN, advertParameters.room.MAX);
   advert.offer.guests = createRandomInteger(advertParameters.guest.MIN, advert.offer.rooms);
-  advert.offer.checkin = returnRandomArrayElement(advertParameters.CHECKIN_TIME);
-  advert.offer.checkout = returnRandomArrayElement(advertParameters.CHECKOUT_TIME);
+  advert.offer.checkin = getRandomArrayElement(advertParameters.CHECKIN_TIME);
+  advert.offer.checkout = getRandomArrayElement(advertParameters.CHECKOUT_TIME);
   advert.offer.features = getRandomUniqueArrayElements(advertParameters.FEATURES);
   advert.offer.description = '';
   advert.offer.photos = [];
