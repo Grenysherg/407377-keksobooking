@@ -165,12 +165,12 @@ var createOfferDialogFeatures = function (features) {
   var feature;
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < features.length; i++) {
+  features.forEach(function (featuresElement) {
     feature = document.createElement('span');
-    feature.setAttribute('class', 'feature__image feature__image--' + features[i]);
+    feature.setAttribute('class', 'feature__image feature__image--' + featuresElement);
 
     fragment.appendChild(feature);
-  }
+  });
 
   return fragment;
 };
@@ -187,9 +187,9 @@ var createPin = function (advert) {
 var createPins = function (adverts) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < adverts.length; i++) {
-    fragment.appendChild(createPin(adverts[i]));
-  }
+  adverts.forEach(function (advertsElement) {
+    fragment.appendChild(createPin(advertsElement));
+  });
 
   pinMap.appendChild(fragment);
 };
