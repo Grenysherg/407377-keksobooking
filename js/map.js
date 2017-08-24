@@ -1,18 +1,28 @@
 'use strict';
 
-var RUBLE_SIGN = String.fromCharCode(8381);
-
 var pinMap = document.querySelector('.tokyo__pin-map');
 var pinTemplate = document.querySelector('#pin-template').content;
 var pinTemplateImg = pinTemplate.querySelector('.rounded');
 
 var offerDialog = document.querySelector('#offer-dialog');
+var offerDialogClose = offerDialog.querySelector('.dialog__close');
 var offerDialogPanel = offerDialog.querySelector('.dialog__panel');
 var lodgeTemplate = document.querySelector('#lodge-template').content;
+
+var keyCodes = {};
+keyCodes.ENTER = 13;
+keyCodes.ESC = 27;
+
+var signs = {};
+signs.RUBLE = String.fromCharCode(8381);
+
+var pins = {};
+pins.ID_STRING = 'Pin';
 
 var advertParameters = {};
 
 advertParameters.AMOUNT = 8;
+advertParameters.INITIAL_INDEX = 0;
 
 advertParameters.avatar = {};
 advertParameters.avatar.NUMBER_MIN = 1;
@@ -106,6 +116,39 @@ var sortArrayElementsRandomOrder = function (array) {
   return array;
 };
 
+var addEventListenersOfferDialogClose = function () {
+  offerDialogClose.addEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.addEventListener('keydown', onOfferDialogCloseEscPress);
+};
+
+var addEventListenersPin = function () {
+  currentPin.addEventListener('click', onPinClick);
+  currentPin.addEventListener('keydown', onPinEnterPress);
+};
+
+var addEventListenersPins = function () {
+  for (var i = 1; i < pinMap.children.length; i++) {
+    pinMap.children[i].addEventListener('click', onPinClick);
+    pinMap.children[i].addEventListener('keydown', onPinEnterPress);
+  }
+};
+
+var addPinClassActive = function () {
+  currentPin.classList.add('pin--active');
+  currentPin.style.cursor = 'default';
+};
+
+var closeOfferDialog = function () {
+  removePinClassActive();
+  addEventListenersPin();
+  currentPin = null;
+
+  offerDialogClose.style.cursor = 'default';
+  offerDialog.classList.add('hidden');
+
+  removeEventListenersOfferDialogClose();
+};
+
 var createAdvert = function (avatarNumber, offerTitle) {
   var advert = {};
 
@@ -150,7 +193,7 @@ var createOfferDialog = function (advert) {
 
   dialogElement.querySelector('.lodge__title').textContent = advert.offer.title;
   dialogElement.querySelector('.lodge__address').textContent = advert.offer.address;
-  dialogElement.querySelector('.lodge__price').textContent = advert.offer.price + RUBLE_SIGN + '/ночь';
+  dialogElement.querySelector('.lodge__price').textContent = advert.offer.price + signs.RUBLE + '/ночь';
   dialogElement.querySelector('.lodge__type').textContent = advertParameters.TYPES[advert.offer.type];
   dialogElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + advert.offer.guests + ' гостей в ' + advert.offer.rooms + ' комнатах';
   dialogElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
@@ -159,6 +202,7 @@ var createOfferDialog = function (advert) {
 
   offerDialog.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
   offerDialog.replaceChild(dialogElement, offerDialogPanel);
+  offerDialogPanel = offerDialog.querySelector('.dialog__panel');
 };
 
 var createOfferDialogFeatures = function (features) {
@@ -175,25 +219,97 @@ var createOfferDialogFeatures = function (features) {
   return fragment;
 };
 
-var createPin = function (advert) {
+var createPin = function (advert, advertIndex) {
   var pinElement = pinTemplate.cloneNode(true);
+  var pinElementContainer = pinElement.querySelector('.pin');
 
-  pinElement.querySelector('.pin').setAttribute('style', 'left: ' + (advert.location.x - advertParameters.pin.WIDTH / 2) + 'px; top: ' + (advert.location.y - advertParameters.pin.HEIGHT) + 'px');
+  pinElementContainer.setAttribute('style', 'left: ' + (advert.location.x - advertParameters.pin.WIDTH / 2) + 'px; top: ' + (advert.location.y - advertParameters.pin.HEIGHT) + 'px');
+  pinElementContainer.setAttribute('id', pins.ID_STRING + advertIndex);
   pinElement.querySelector('.rounded').setAttribute('src', advert.author.avatar);
 
   return pinElement;
 };
 
-var createPins = function (adverts) {
+var createPins = function () {
   var fragment = document.createDocumentFragment();
 
-  adverts.forEach(function (advertsElement) {
-    fragment.appendChild(createPin(advertsElement));
-  });
+  for (var i = 0; i < adverts.length; i++) {
+    fragment.appendChild(createPin(adverts[i], i));
+  }
 
   pinMap.appendChild(fragment);
 };
 
+var openOfferDialog = function (evt) {
+  if (currentPin) {
+    removePinClassActive();
+    addEventListenersPin();
+  } else {
+    offerDialog.classList.remove('hidden');
+    offerDialogClose.style.cursor = 'pointer';
+
+    addEventListenersOfferDialogClose();
+  }
+
+  currentPin = evt.currentTarget;
+  var currentPinId = currentPin.getAttribute('id');
+  var currentAdvertIndex = Number(currentPinId.slice(pins.ID_STRING.length));
+
+  showCurrentPinAndCurrentAdvert(currentAdvertIndex);
+};
+
+var removeEventListenersOfferDialogClose = function () {
+  offerDialogClose.removeEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.removeEventListener('keydown', onOfferDialogCloseEscPress);
+};
+
+var removeEventListenersPin = function () {
+  currentPin.removeEventListener('click', onPinClick);
+  currentPin.removeEventListener('keydown', onPinEnterPress);
+};
+
+var removePinClassActive = function () {
+  currentPin.classList.remove('pin--active');
+  currentPin.style.cursor = 'pointer';
+};
+
+var showCurrentPinAndCurrentAdvert = function (currentAdvertIndex) {
+  addPinClassActive();
+  removeEventListenersPin();
+
+  createOfferDialog(adverts[currentAdvertIndex]);
+};
+
+var onOfferDialogCloseClick = function (evt) {
+  evt.preventDefault();
+  closeOfferDialog();
+};
+
+var onOfferDialogCloseEscPress = function (evt) {
+  evt.preventDefault();
+
+  if (evt.keyCode === keyCodes.ESC) {
+    closeOfferDialog();
+  }
+};
+
+var onPinClick = function (evt) {
+  evt.preventDefault();
+  openOfferDialog(evt);
+};
+
+var onPinEnterPress = function (evt) {
+  evt.preventDefault();
+
+  if (evt.keyCode === keyCodes.ENTER) {
+    openOfferDialog(evt);
+  }
+};
+
 var adverts = createAdverts();
-createPins(adverts);
-createOfferDialog(adverts[0]);
+createPins();
+addEventListenersPins();
+
+var currentPin = pinMap.querySelector('#' + pins.ID_STRING + advertParameters.INITIAL_INDEX);
+showCurrentPinAndCurrentAdvert(advertParameters.INITIAL_INDEX);
+addEventListenersOfferDialogClose();
