@@ -61,6 +61,9 @@ var onOfferTitleInvalid = function () {
   if (offerTitle.element.validity.valueMissing) {
     offerTitle.element.setCustomValidity('Обязательное поле');
     offerTitle.element.style.borderColor = 'red';
+  } else {
+    offerTitle.element.setCustomValidity('');
+    offerTitle.element.style.borderColor = 'green';
   }
 };
 
