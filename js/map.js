@@ -6,36 +6,35 @@ var pinTemplateImg = pinTemplate.querySelector('.rounded');
 
 var offerDialog = document.querySelector('#offer-dialog');
 var offerDialogClose = offerDialog.querySelector('.dialog__close');
-var offerDialogPanel = offerDialog.querySelector('.dialog__panel');
 var lodgeTemplate = document.querySelector('#lodge-template').content;
 
-var keyCodes = {};
-keyCodes.ENTER = 13;
-keyCodes.ESC = 27;
+var keyCode = {};
+keyCode.ENTER = 13;
+keyCode.ESC = 27;
 
-var signs = {};
-signs.RUBLE = String.fromCharCode(8381);
+var sign = {};
+sign.RUBLE = String.fromCharCode(8381);
 
-var pins = {};
-pins.ID_STRING = 'Pin';
+var pin = {};
+pin.ID_STRING = 'Pin';
 
-var advertParameters = {};
+var advertParameter = {};
 
-advertParameters.AMOUNT = 8;
-advertParameters.INITIAL_INDEX = 0;
+advertParameter.AMOUNT = 8;
+advertParameter.INITIAL_INDEX = 0;
 
-advertParameters.avatar = {};
-advertParameters.avatar.NUMBER_MIN = 1;
+advertParameter.avatar = {};
+advertParameter.avatar.NUMBER_MIN = 1;
 
-advertParameters.locationX = {};
-advertParameters.locationX.MIN = 300;
-advertParameters.locationX.MAX = 900;
+advertParameter.locationX = {};
+advertParameter.locationX.MIN = 300;
+advertParameter.locationX.MAX = 900;
 
-advertParameters.locationY = {};
-advertParameters.locationY.MIN = 100;
-advertParameters.locationY.MAX = 500;
+advertParameter.locationY = {};
+advertParameter.locationY.MIN = 100;
+advertParameter.locationY.MAX = 500;
 
-advertParameters.TITLES = [
+advertParameter.TITLES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -46,28 +45,28 @@ advertParameters.TITLES = [
   'Неуютное бунгало по колено в воде'
 ];
 
-advertParameters.price = {};
-advertParameters.price.MIN = 1000;
-advertParameters.price.MAX = 1000000;
+advertParameter.price = {};
+advertParameter.price.MIN = 1000;
+advertParameter.price.MAX = 1000000;
 
-advertParameters.TYPES = {'flat': 'Квартира', 'house': 'Дом', 'bungalo': 'Бунгало'};
+advertParameter.TYPES = {'flat': 'Квартира', 'house': 'Дом', 'bungalo': 'Бунгало'};
 
-advertParameters.room = {};
-advertParameters.room.MIN = 1;
-advertParameters.room.MAX = 5;
+advertParameter.room = {};
+advertParameter.room.MIN = 1;
+advertParameter.room.MAX = 5;
 
-advertParameters.guest = {};
-advertParameters.guest.MIN = 1;
+advertParameter.guest = {};
+advertParameter.guest.MIN = 1;
 
-advertParameters.CHECKIN_TIME = ['12:00', '13:00', '14:00'];
+advertParameter.CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 
-advertParameters.CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
+advertParameter.CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 
-advertParameters.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+advertParameter.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-advertParameters.pin = {};
-advertParameters.pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
-advertParameters.pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
+advertParameter.pin = {};
+advertParameter.pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
+advertParameter.pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
 
 var createRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -116,39 +115,6 @@ var sortArrayElementsRandomOrder = function (array) {
   return array;
 };
 
-var addEventListenersOfferDialogClose = function () {
-  offerDialogClose.addEventListener('click', onOfferDialogCloseClick);
-  offerDialogClose.addEventListener('keydown', onOfferDialogCloseEscPress);
-};
-
-var addEventListenersPin = function () {
-  currentPin.addEventListener('click', onPinClick);
-  currentPin.addEventListener('keydown', onPinEnterPress);
-};
-
-var addEventListenersPins = function () {
-  for (var i = 1; i < pinMap.children.length; i++) {
-    pinMap.children[i].addEventListener('click', onPinClick);
-    pinMap.children[i].addEventListener('keydown', onPinEnterPress);
-  }
-};
-
-var addPinClassActive = function () {
-  currentPin.classList.add('pin--active');
-  currentPin.style.cursor = 'default';
-};
-
-var closeOfferDialog = function () {
-  removePinClassActive();
-  addEventListenersPin();
-  currentPin = null;
-
-  offerDialogClose.style.cursor = 'default';
-  offerDialog.classList.add('hidden');
-
-  removeEventListenersOfferDialogClose();
-};
-
 var createAdvert = function (avatarNumber, offerTitle) {
   var advert = {};
 
@@ -157,19 +123,19 @@ var createAdvert = function (avatarNumber, offerTitle) {
   advert.author.avatar = 'img/avatars/user' + avatarNumber + '.png';
 
   advert.location = {};
-  advert.location.x = createRandomInteger(advertParameters.locationX.MIN, advertParameters.locationX.MAX);
-  advert.location.y = createRandomInteger(advertParameters.locationY.MIN, advertParameters.locationY.MAX);
+  advert.location.x = createRandomInteger(advertParameter.locationX.MIN, advertParameter.locationX.MAX);
+  advert.location.y = createRandomInteger(advertParameter.locationY.MIN, advertParameter.locationY.MAX);
 
   advert.offer = {};
   advert.offer.title = offerTitle;
   advert.offer.address = advert.location.x + ', ' + advert.location.y;
-  advert.offer.price = createRandomInteger(advertParameters.price.MIN, advertParameters.price.MAX);
-  advert.offer.type = getRandomObjectKey(advertParameters.TYPES);
-  advert.offer.rooms = createRandomInteger(advertParameters.room.MIN, advertParameters.room.MAX);
-  advert.offer.guests = createRandomInteger(advertParameters.guest.MIN, advert.offer.rooms);
-  advert.offer.checkin = getRandomArrayElement(advertParameters.CHECKIN_TIME);
-  advert.offer.checkout = getRandomArrayElement(advertParameters.CHECKOUT_TIME);
-  advert.offer.features = getRandomUniqueArrayElements(advertParameters.FEATURES);
+  advert.offer.price = createRandomInteger(advertParameter.price.MIN, advertParameter.price.MAX);
+  advert.offer.type = getRandomObjectKey(advertParameter.TYPES);
+  advert.offer.rooms = createRandomInteger(advertParameter.room.MIN, advertParameter.room.MAX);
+  advert.offer.guests = createRandomInteger(advertParameter.guest.MIN, advert.offer.rooms);
+  advert.offer.checkin = getRandomArrayElement(advertParameter.CHECKIN_TIME);
+  advert.offer.checkout = getRandomArrayElement(advertParameter.CHECKOUT_TIME);
+  advert.offer.features = getRandomUniqueArrayElements(advertParameter.FEATURES);
   advert.offer.description = '';
   advert.offer.photos = [];
 
@@ -179,10 +145,10 @@ var createAdvert = function (avatarNumber, offerTitle) {
 var createAdverts = function () {
   var adverts = [];
 
-  var offerTitles = sortArrayElementsRandomOrder(advertParameters.TITLES.concat());
+  var offerTitles = sortArrayElementsRandomOrder(advertParameter.TITLES.concat());
 
-  for (var i = 0; i < advertParameters.AMOUNT; i++) {
-    adverts[i] = createAdvert(advertParameters.avatar.NUMBER_MIN + i, offerTitles[i]);
+  for (var i = 0; i < advertParameter.AMOUNT; i++) {
+    adverts[i] = createAdvert(advertParameter.avatar.NUMBER_MIN + i, offerTitles[i]);
   }
 
   return adverts;
@@ -190,11 +156,12 @@ var createAdverts = function () {
 
 var createOfferDialog = function (advert) {
   var dialogElement = lodgeTemplate.cloneNode(true);
+  var offerDialogPanel = offerDialog.querySelector('.dialog__panel');
 
   dialogElement.querySelector('.lodge__title').textContent = advert.offer.title;
   dialogElement.querySelector('.lodge__address').textContent = advert.offer.address;
-  dialogElement.querySelector('.lodge__price').textContent = advert.offer.price + signs.RUBLE + '/ночь';
-  dialogElement.querySelector('.lodge__type').textContent = advertParameters.TYPES[advert.offer.type];
+  dialogElement.querySelector('.lodge__price').textContent = advert.offer.price + sign.RUBLE + '/ночь';
+  dialogElement.querySelector('.lodge__type').textContent = advertParameter.TYPES[advert.offer.type];
   dialogElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + advert.offer.guests + ' гостей в ' + advert.offer.rooms + ' комнатах';
   dialogElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
   dialogElement.querySelector('.lodge__features').appendChild(createOfferDialogFeatures(advert.offer.features));
@@ -202,7 +169,6 @@ var createOfferDialog = function (advert) {
 
   offerDialog.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
   offerDialog.replaceChild(dialogElement, offerDialogPanel);
-  offerDialogPanel = offerDialog.querySelector('.dialog__panel');
 };
 
 var createOfferDialogFeatures = function (features) {
@@ -223,8 +189,8 @@ var createPin = function (advert, advertIndex) {
   var pinElement = pinTemplate.cloneNode(true);
   var pinElementContainer = pinElement.querySelector('.pin');
 
-  pinElementContainer.setAttribute('style', 'left: ' + (advert.location.x - advertParameters.pin.WIDTH / 2) + 'px; top: ' + (advert.location.y - advertParameters.pin.HEIGHT) + 'px');
-  pinElementContainer.setAttribute('id', pins.ID_STRING + advertIndex);
+  pinElementContainer.setAttribute('style', 'left: ' + (advert.location.x - advertParameter.pin.WIDTH / 2) + 'px; top: ' + (advert.location.y - advertParameter.pin.HEIGHT) + 'px');
+  pinElementContainer.setAttribute('id', pin.ID_STRING + advertIndex);
   pinElement.querySelector('.rounded').setAttribute('src', advert.author.avatar);
 
   return pinElement;
@@ -240,42 +206,73 @@ var createPins = function () {
   pinMap.appendChild(fragment);
 };
 
-var openOfferDialog = function (evt) {
-  if (currentPin) {
+var openOfferDialog = function (target) {
+  if (pin.current) {
     removePinClassActive();
-    addEventListenersPin();
   } else {
     offerDialog.classList.remove('hidden');
-    offerDialogClose.style.cursor = 'pointer';
 
     addEventListenersOfferDialogClose();
   }
 
-  currentPin = evt.currentTarget;
-  var currentPinId = currentPin.getAttribute('id');
-  var currentAdvertIndex = Number(currentPinId.slice(pins.ID_STRING.length));
+  pin.current = target;
+  var currentPinId = pin.current.getAttribute('id');
+  var currentAdvertIndex = Number(currentPinId.slice(pin.ID_STRING.length));
 
   showCurrentPinAndCurrentAdvert(currentAdvertIndex);
 };
 
-var removeEventListenersOfferDialogClose = function () {
-  offerDialogClose.removeEventListener('click', onOfferDialogCloseClick);
-  offerDialogClose.removeEventListener('keydown', onOfferDialogCloseEscPress);
+var closeOfferDialog = function () {
+  removePinClassActive();
+  pin.current = null;
+
+  offerDialog.classList.add('hidden');
+
+  removeEventListenersOfferDialogClose();
 };
 
-var removeEventListenersPin = function () {
-  currentPin.removeEventListener('click', onPinClick);
-  currentPin.removeEventListener('keydown', onPinEnterPress);
+var addEventListenersPinMap = function () {
+  pinMap.addEventListener('click', onPinMapClick);
+  pinMap.addEventListener('keydown', onPinMapEnterPress);
+};
+
+var addEventListenersOfferDialogClose = function () {
+  offerDialogClose.addEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.addEventListener('keydown', onOfferDialogCloseEnterPress);
+};
+
+var removeEventListenersOfferDialogClose = function () {
+  offerDialogClose.removeEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.removeEventListener('keydown', onOfferDialogCloseEnterPress);
+};
+
+var addPinClassActive = function () {
+  pin.current.classList.add('pin--active');
+  pin.current.style.cursor = 'default';
 };
 
 var removePinClassActive = function () {
-  currentPin.classList.remove('pin--active');
-  currentPin.style.cursor = 'pointer';
+  pin.current.classList.remove('pin--active');
+  pin.current.style.cursor = 'pointer';
+};
+
+var checkCurrentPinMapElement = function (evt) {
+  var target = evt.target;
+  var currentPinId = pin.current ? pin.current.getAttribute('id') : null;
+
+  while (target !== pinMap) {
+    if (target.id && target.id !== currentPinId) {
+      openOfferDialog(target);
+
+      return;
+    }
+
+    target = target.parentNode;
+  }
 };
 
 var showCurrentPinAndCurrentAdvert = function (currentAdvertIndex) {
   addPinClassActive();
-  removeEventListenersPin();
 
   createOfferDialog(adverts[currentAdvertIndex]);
 };
@@ -285,31 +282,28 @@ var onOfferDialogCloseClick = function (evt) {
   closeOfferDialog();
 };
 
-var onOfferDialogCloseEscPress = function (evt) {
+var onOfferDialogCloseEnterPress = function (evt) {
   evt.preventDefault();
 
-  if (evt.keyCode === keyCodes.ESC) {
+  if (evt.keyCode === keyCode.ENTER) {
     closeOfferDialog();
   }
 };
 
-var onPinClick = function (evt) {
-  evt.preventDefault();
-  openOfferDialog(evt);
+var onPinMapClick = function (evt) {
+  checkCurrentPinMapElement(evt);
 };
 
-var onPinEnterPress = function (evt) {
-  evt.preventDefault();
-
-  if (evt.keyCode === keyCodes.ENTER) {
-    openOfferDialog(evt);
+var onPinMapEnterPress = function (evt) {
+  if (evt.keyCode === keyCode.ENTER) {
+    checkCurrentPinMapElement(evt);
   }
 };
 
 var adverts = createAdverts();
 createPins();
-addEventListenersPins();
 
-var currentPin = pinMap.querySelector('#' + pins.ID_STRING + advertParameters.INITIAL_INDEX);
-showCurrentPinAndCurrentAdvert(advertParameters.INITIAL_INDEX);
+pin.current = pinMap.querySelector('#' + pin.ID_STRING + advertParameter.INITIAL_INDEX);
+showCurrentPinAndCurrentAdvert(advertParameter.INITIAL_INDEX);
+addEventListenersPinMap();
 addEventListenersOfferDialogClose();
