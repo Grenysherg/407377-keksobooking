@@ -17,6 +17,8 @@ sign.RUBLE = String.fromCharCode(8381);
 
 var pin = {};
 pin.ID_STRING = 'Pin';
+pin.current = null;
+
 
 var advertParameter = {};
 
@@ -67,6 +69,7 @@ advertParameter.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator
 advertParameter.pin = {};
 advertParameter.pin.WIDTH = parseInt(pinTemplateImg.getAttribute('width'), 10);
 advertParameter.pin.HEIGHT = parseInt(pinTemplateImg.getAttribute('height'), 10);
+
 
 var createRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -206,20 +209,25 @@ var createPins = function () {
   pinMap.appendChild(fragment);
 };
 
+
+/* Показ/скрытие карточки объявления */
+
 var openOfferDialog = function (target) {
   if (pin.current) {
     removePinClassActive();
   } else {
     offerDialog.classList.remove('hidden');
 
-    addEventListenersOfferDialogClose();
+    addEventsOfferDialogClose();
+    document.addEventListener('keydown', onDocumentEscPress);
   }
 
   pin.current = target;
   var currentPinId = pin.current.getAttribute('id');
   var currentAdvertIndex = Number(currentPinId.slice(pin.ID_STRING.length));
 
-  showCurrentPinAndCurrentAdvert(currentAdvertIndex);
+  addPinClassActive();
+  createOfferDialog(adverts[currentAdvertIndex]);
 };
 
 var closeOfferDialog = function () {
@@ -228,32 +236,8 @@ var closeOfferDialog = function () {
 
   offerDialog.classList.add('hidden');
 
-  removeEventListenersOfferDialogClose();
-};
-
-var addEventListenersPinMap = function () {
-  pinMap.addEventListener('click', onPinMapClick);
-  pinMap.addEventListener('keydown', onPinMapEnterPress);
-};
-
-var addEventListenersOfferDialogClose = function () {
-  offerDialogClose.addEventListener('click', onOfferDialogCloseClick);
-  offerDialogClose.addEventListener('keydown', onOfferDialogCloseEnterPress);
-};
-
-var removeEventListenersOfferDialogClose = function () {
-  offerDialogClose.removeEventListener('click', onOfferDialogCloseClick);
-  offerDialogClose.removeEventListener('keydown', onOfferDialogCloseEnterPress);
-};
-
-var addPinClassActive = function () {
-  pin.current.classList.add('pin--active');
-  pin.current.style.cursor = 'default';
-};
-
-var removePinClassActive = function () {
-  pin.current.classList.remove('pin--active');
-  pin.current.style.cursor = 'pointer';
+  removeEventsOfferDialogClose();
+  document.removeEventListener('keydown', onDocumentEscPress);
 };
 
 var checkCurrentPinMapElement = function (evt) {
@@ -271,10 +255,39 @@ var checkCurrentPinMapElement = function (evt) {
   }
 };
 
-var showCurrentPinAndCurrentAdvert = function (currentAdvertIndex) {
-  addPinClassActive();
+var addEventsPinMap = function () {
+  pinMap.addEventListener('click', onPinMapClick);
+  pinMap.addEventListener('keydown', onPinMapEnterPress);
+};
 
-  createOfferDialog(adverts[currentAdvertIndex]);
+var addEventsOfferDialogClose = function () {
+  offerDialogClose.addEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.addEventListener('keydown', onOfferDialogCloseEnterPress);
+};
+
+var removeEventsOfferDialogClose = function () {
+  offerDialogClose.removeEventListener('click', onOfferDialogCloseClick);
+  offerDialogClose.removeEventListener('keydown', onOfferDialogCloseEnterPress);
+};
+
+var addPinClassActive = function () {
+  pin.current.classList.add('pin--active');
+  pin.current.style.cursor = 'default';
+};
+
+var removePinClassActive = function () {
+  pin.current.classList.remove('pin--active');
+  pin.current.style.cursor = 'pointer';
+};
+
+var onPinMapClick = function (evt) {
+  checkCurrentPinMapElement(evt);
+};
+
+var onPinMapEnterPress = function (evt) {
+  if (evt.keyCode === keyCode.ENTER) {
+    checkCurrentPinMapElement(evt);
+  }
 };
 
 var onOfferDialogCloseClick = function (evt) {
@@ -290,20 +303,15 @@ var onOfferDialogCloseEnterPress = function (evt) {
   }
 };
 
-var onPinMapClick = function (evt) {
-  checkCurrentPinMapElement(evt);
-};
-
-var onPinMapEnterPress = function (evt) {
-  if (evt.keyCode === keyCode.ENTER) {
-    checkCurrentPinMapElement(evt);
+var onDocumentEscPress = function (evt) {
+  if (evt.keyCode === keyCode.ESC) {
+    closeOfferDialog();
   }
 };
+
 
 var adverts = createAdverts();
 createPins();
 
-pin.current = pinMap.querySelector('#' + pin.ID_STRING + advertParameter.INITIAL_INDEX);
-showCurrentPinAndCurrentAdvert(advertParameter.INITIAL_INDEX);
-addEventListenersPinMap();
-addEventListenersOfferDialogClose();
+addEventsPinMap();
+openOfferDialog(pinMap.querySelector('#' + pin.ID_STRING + advertParameter.INITIAL_INDEX));
