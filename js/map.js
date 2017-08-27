@@ -8,6 +8,8 @@ var offerDialog = document.querySelector('#offer-dialog');
 var offerDialogClose = offerDialog.querySelector('.dialog__close');
 var lodgeTemplate = document.querySelector('#lodge-template').content;
 
+var currentPin = null;
+
 var keyCode = {};
 keyCode.ENTER = 13;
 keyCode.ESC = 27;
@@ -17,7 +19,6 @@ sign.RUBLE = String.fromCharCode(8381);
 
 var pin = {};
 pin.ID_STRING = 'Pin';
-pin.current = null;
 
 
 var advertParameter = {};
@@ -213,7 +214,7 @@ var createPins = function () {
 /* Показ/скрытие карточки объявления */
 
 var openOfferDialog = function (target) {
-  if (pin.current) {
+  if (currentPin) {
     removePinClassActive();
   } else {
     offerDialog.classList.remove('hidden');
@@ -222,8 +223,8 @@ var openOfferDialog = function (target) {
     document.addEventListener('keydown', onDocumentEscPress);
   }
 
-  pin.current = target;
-  var currentPinId = pin.current.getAttribute('id');
+  currentPin = target;
+  var currentPinId = currentPin.getAttribute('id');
   var currentAdvertIndex = Number(currentPinId.slice(pin.ID_STRING.length));
 
   addPinClassActive();
@@ -232,7 +233,7 @@ var openOfferDialog = function (target) {
 
 var closeOfferDialog = function () {
   removePinClassActive();
-  pin.current = null;
+  currentPin = null;
 
   offerDialog.classList.add('hidden');
 
@@ -242,7 +243,7 @@ var closeOfferDialog = function () {
 
 var checkCurrentPinMapElement = function (evt) {
   var target = evt.target;
-  var currentPinId = pin.current ? pin.current.getAttribute('id') : null;
+  var currentPinId = currentPin ? currentPin.getAttribute('id') : null;
 
   while (target !== pinMap) {
     if (target.id && target.id !== currentPinId) {
@@ -271,13 +272,13 @@ var removeEventsOfferDialogClose = function () {
 };
 
 var addPinClassActive = function () {
-  pin.current.classList.add('pin--active');
-  pin.current.style.cursor = 'default';
+  currentPin.classList.add('pin--active');
+  currentPin.style.cursor = 'default';
 };
 
 var removePinClassActive = function () {
-  pin.current.classList.remove('pin--active');
-  pin.current.style.cursor = 'pointer';
+  currentPin.classList.remove('pin--active');
+  currentPin.style.cursor = 'pointer';
 };
 
 var onPinMapClick = function (evt) {
