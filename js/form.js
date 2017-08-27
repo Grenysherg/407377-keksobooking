@@ -125,17 +125,15 @@ var onFormLodgeTypeChange = function (evt) {
 var onFormPriceInvalid = function () {
   var currentLodgeType = lodgeType[lodgeType.current];
 
-  if (!formPrice.validity.valid) {
-    if (formPrice.validity.valueMissing) {
-      formPrice.setCustomValidity(validityMessage.EMPTY_FIELD);
-      setErrorColorFormInput(formPrice);
-    } else if (formPrice.validity.rangeUnderflow) {
-      formPrice.setCustomValidity('Для типа жилья "' + currentLodgeType.VALUE + '" минимально возможная цена: ' + currentLodgeType.MIN_PRICE);
-      setErrorColorFormInput(formPrice);
-    } else if (formPrice.validity.rangeOverflow) {
-      formPrice.setCustomValidity('Максимально возможная цена: ' + price.MAX);
-      setErrorColorFormInput(formPrice);
-    }
+  if (formPrice.validity.valueMissing) {
+    formPrice.setCustomValidity(validityMessage.EMPTY_FIELD);
+    setErrorColorFormInput(formPrice);
+  } else if (formPrice.validity.rangeUnderflow) {
+    formPrice.setCustomValidity('Для типа жилья "' + currentLodgeType.VALUE + '" минимально возможная цена: ' + currentLodgeType.MIN_PRICE);
+    setErrorColorFormInput(formPrice);
+  } else if (formPrice.validity.rangeOverflow) {
+    formPrice.setCustomValidity('Максимально возможная цена: ' + price.MAX);
+    setErrorColorFormInput(formPrice);
   } else {
     formPrice.setCustomValidity('');
     setValidColorFormInput(formPrice);
@@ -175,14 +173,12 @@ var onFormRoomAmountChange = function (evt) {
 /* Валидация ввода адреса */
 
 var onFormAddressInvalid = function () {
-  if (!formPrice.validity.valid) {
-    if (formPrice.validity.valueMissing) {
-      formPrice.setCustomValidity(validityMessage.EMPTY_FIELD);
-      setErrorColorFormInput(formPrice);
-    }
+  if (formAddress.validity.valueMissing) {
+    formAddress.setCustomValidity(validityMessage.EMPTY_FIELD);
+    setErrorColorFormInput(formAddress);
   } else {
-    formPrice.setCustomValidity('');
-    setValidColorFormInput(formPrice);
+    formAddress.setCustomValidity('');
+    setValidColorFormInput(formAddress);
   }
 };
 
