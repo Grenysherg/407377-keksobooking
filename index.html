@@ -123,7 +123,7 @@
         <div class="form__panel">
           <div class="form__element  form__element--wide">
             <label for="title">Заголовок объявления</label>
-            <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка, например" required>
+            <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка, например" maxlength="100" required>
           </div>
           <div class="form__row">
             <div class="form__element">
@@ -137,14 +137,14 @@
             </div>
             <div class="form__element">
               <label for="price">Цена за ночь, руб.</label>
-              <input id="price" name="price" type="number" placeholder="5000" required>
+              <input type="number" id="price" name="price" placeholder="5000" value="1000" min="0" max="1000000" required>
             </div>
           </div>
           <div class="form__row">
             <div class="form__element">
               <label for="room_number">Кол-во комнат</label>
               <select id="room_number" name="rooms">
-                <option value="1" selected>1 комната</option>
+                <option value="1">1 комната</option>
                 <option value="2">2 комнаты</option>
                 <option value="3">3 комнаты</option>
                 <option value="100">100 комнат</option>
@@ -153,7 +153,7 @@
             <div class="form__element">
               <label for="capacity">Количество мест</label>
               <select id="capacity" name="capacity">
-                <option value="3" selected>для 3 гостей</option>
+                <option value="3">для 3 гостей</option>
                 <option value="2">для 2 гостей</option>
                 <option value="1">для 1 гостя</option>
                 <option value="0">не для гостей</option>
@@ -168,7 +168,7 @@
         <div class="form__panel">
           <div class="form__element  form__element--wide">
             <label for="address">Адрес</label>
-            <input id="address" name="address" type="text">
+            <input id="address" name="address" type="text" required>
           </div>
           <div class="form__row">
             <div class="form__element">

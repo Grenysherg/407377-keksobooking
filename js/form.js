@@ -1,15 +1,25 @@
 'use strict';
 
 var form = document.querySelector('.notice__form');
+var formOfferTitle = form.querySelector('#title');
+var formLodgeType = form.querySelector('#type');
+var formPrice = form.querySelector('#price');
+var formRoomAmount = form.querySelector('#room_number');
+var formCapacity = form.querySelector('#capacity');
+var formAddress = form.querySelector('#address');
+var formTimeIn = form.querySelector('#timein');
+var formTimeOut = form.querySelector('#timeout');
+
+var validityMessage = {};
+validityMessage.EMPTY_FIELD = 'Обязательное поле';
 
 var offerTitle = {};
-offerTitle.element = form.querySelector('#title');
 offerTitle.MIN_LENGTH = 30;
-offerTitle.MAX_LENGTH = 100;
+offerTitle.MAX_LENGTH = Number(formOfferTitle.getAttribute('maxlength'));
+
 
 var lodgeType = {};
-lodgeType.element = form.querySelector('#type');
-lodgeType.current = lodgeType.element.value;
+lodgeType.current = formLodgeType.value;
 
 lodgeType.bungalo = {};
 lodgeType.bungalo.VALUE = 'Бунгало';
@@ -27,91 +37,176 @@ lodgeType.palace = {};
 lodgeType.palace.VALUE = 'Дворец';
 lodgeType.palace.MIN_PRICE = 10000;
 
+
 var price = {};
-price.element = form.querySelector('#price');
-price.DEFAULT = 1000;
-price.MAX = 1000000;
+price.DEFAULT = lodgeType[lodgeType.current].MIN_PRICE;
+price.MAX = Number(formPrice.getAttribute('max'));
 
-price.element.setAttribute('value', String(price.DEFAULT));
-price.element.setAttribute('min', String(lodgeType[lodgeType.current].MIN_PRICE));
-price.element.setAttribute('max', String(price.MAX));
+var roomAmount = {};
+roomAmount.current = Number(formRoomAmount.value);
+roomAmount.NO_CAPACITY = 100;
 
-var timeIn = {};
-timeIn.element = form.querySelector('#timein');
+var capacity = {};
+capacity.getProperties = function () {
+  this.emptyOption = formCapacity.options[formCapacity.options.length - 1];
+  formCapacity.remove(formCapacity.options.length - 1);
+  this.select = formCapacity.cloneNode(true);
+};
 
-var timeOut = {};
-timeOut.element = form.querySelector('#timeout');
 
-var onOfferTitleInput = function (evt) {
+var setErrorColorFormInput = function (formInput) {
+  formInput.setAttribute('style', 'border-color: red');
+};
+
+var setValidColorFormInput = function (formInput) {
+  formInput.removeAttribute('style');
+};
+
+var addValidityEventsForm = function () {
+  formOfferTitle.addEventListener('input', onFormOfferTitleInput);
+  formOfferTitle.addEventListener('invalid', onFormOfferTitleInvalid);
+
+  formLodgeType.addEventListener('change', onFormLodgeTypeChange);
+
+  formPrice.addEventListener('invalid', onFormPriceInvalid);
+
+  formRoomAmount.addEventListener('change', onFormRoomAmountChange);
+
+  formAddress.addEventListener('invalid', onFormAddressInvalid);
+
+  formTimeIn.addEventListener('change', onTimeInChange);
+  formTimeOut.addEventListener('change', onTimeOutChange);
+};
+
+
+/* Валидация ввода заголовка объявления */
+
+var onFormOfferTitleInput = function (evt) {
   var target = evt.target;
 
   if (target.value.length < offerTitle.MIN_LENGTH) {
-    target.setCustomValidity('Минимум символов: ' + offerTitle.MIN_LENGTH);
-    offerTitle.element.style.borderColor = 'red';
-  } else if (target.value.length > offerTitle.MAX_LENGTH) {
-    target.setCustomValidity('Максимум символов: ' + offerTitle.MAX_LENGTH);
-    offerTitle.element.style.borderColor = 'red';
+    formOfferTitle.setCustomValidity('Минимально возможное количество символов: ' + offerTitle.MIN_LENGTH);
+    setErrorColorFormInput(formOfferTitle);
   } else {
-    target.setCustomValidity('');
-    offerTitle.element.style.borderColor = 'green';
+    formOfferTitle.setCustomValidity('');
+    setValidColorFormInput(formOfferTitle);
   }
 };
 
-var onOfferTitleInvalid = function () {
-  if (offerTitle.element.validity.valueMissing) {
-    offerTitle.element.setCustomValidity('Обязательное поле');
-    offerTitle.element.style.borderColor = 'red';
+var onFormOfferTitleInvalid = function () {
+  if (!formOfferTitle.validity.valid) {
+    if (formOfferTitle.validity.valueMissing) {
+      formOfferTitle.setCustomValidity(validityMessage.EMPTY_FIELD);
+      setErrorColorFormInput(formOfferTitle);
+    } else if (formOfferTitle.validity.tooLong) {
+      formOfferTitle.setCustomValidity('Максимально возможное количество символов: ' + offerTitle.MAX_LENGTH);
+      setErrorColorFormInput(formOfferTitle);
+    }
   } else {
-    offerTitle.element.setCustomValidity('');
-    offerTitle.element.style.borderColor = 'green';
+    formOfferTitle.setCustomValidity('');
+    setValidColorFormInput(formOfferTitle);
   }
 };
 
-var onLodgeTypeChange = function (evt) {
+
+/* Валидация ввода цены */
+
+var setMinFormPrice = function () {
+  formPrice.setAttribute('min', String(lodgeType[lodgeType.current].MIN_PRICE));
+};
+
+var onFormLodgeTypeChange = function (evt) {
   var target = evt.target;
-
   lodgeType.current = target.value;
-  price.element.setAttribute('min', String(lodgeType[lodgeType.current].MIN_PRICE));
+
+  setMinFormPrice();
 };
 
-var onPriceInvalid = function () {
+var onFormPriceInvalid = function () {
   var currentLodgeType = lodgeType[lodgeType.current];
 
-  if (price.element.validity.valueMissing) {
-    price.element.setCustomValidity('Обязательное поле');
-    price.element.style.borderColor = 'red';
-  } else if (price.element.validity.rangeUnderflow) {
-    price.element.setCustomValidity('Для типа жилья "' + currentLodgeType.VALUE + '" минимальная цена: ' + currentLodgeType.MIN_PRICE);
-    price.element.style.borderColor = 'red';
-  } else if (price.element.validity.rangeOverflow) {
-    price.element.setCustomValidity('Максимально возможная цена: ' + price.MAX);
-    price.element.style.borderColor = 'red';
+  if (!formPrice.validity.valid) {
+    if (formPrice.validity.valueMissing) {
+      formPrice.setCustomValidity(validityMessage.EMPTY_FIELD);
+      setErrorColorFormInput(formPrice);
+    } else if (formPrice.validity.rangeUnderflow) {
+      formPrice.setCustomValidity('Для типа жилья "' + currentLodgeType.VALUE + '" минимально возможная цена: ' + currentLodgeType.MIN_PRICE);
+      setErrorColorFormInput(formPrice);
+    } else if (formPrice.validity.rangeOverflow) {
+      formPrice.setCustomValidity('Максимально возможная цена: ' + price.MAX);
+      setErrorColorFormInput(formPrice);
+    }
   } else {
-    price.element.setCustomValidity('');
-    price.element.style.borderColor = 'green';
+    formPrice.setCustomValidity('');
+    setValidColorFormInput(formPrice);
   }
 };
+
+
+/* Валидация выбора количества комнат/гостей */
+
+var setCurrentCapacityOptions = function () {
+  formCapacity.options.length = 0;
+
+  if (roomAmount.current === roomAmount.NO_CAPACITY) {
+    formCapacity.appendChild(capacity.emptyOption);
+
+    return;
+  }
+
+  var fragment = document.createDocumentFragment();
+  var i = capacity.select.options.length - roomAmount.current || 0;
+
+  for (; i < capacity.select.options.length; i++) {
+    fragment.appendChild(capacity.select.options[i].cloneNode(true));
+  }
+
+  formCapacity.appendChild(fragment);
+};
+
+var onFormRoomAmountChange = function (evt) {
+  var target = evt.target;
+
+  roomAmount.current = Number(target.value);
+  setCurrentCapacityOptions();
+};
+
+
+/* Валидация ввода адреса */
+
+var onFormAddressInvalid = function () {
+  if (!formPrice.validity.valid) {
+    if (formPrice.validity.valueMissing) {
+      formPrice.setCustomValidity(validityMessage.EMPTY_FIELD);
+      setErrorColorFormInput(formPrice);
+    }
+  } else {
+    formPrice.setCustomValidity('');
+    setValidColorFormInput(formPrice);
+  }
+};
+
+
+/* Валидация выбора времени заезда/выезда */
 
 var onTimeInChange = function (evt) {
   var target = evt.target;
 
-  timeOut.element.value = target.value;
+  formTimeOut.value = target.value;
 };
 
 var onTimeOutChange = function (evt) {
   var target = evt.target;
 
-  timeIn.element.value = target.value;
+  formTimeIn.value = target.value;
 };
 
-offerTitle.element.addEventListener('invalid', onOfferTitleInvalid);
-offerTitle.element.addEventListener('input', onOfferTitleInput);
 
-lodgeType.element.addEventListener('change', onLodgeTypeChange);
+formPrice.setAttribute('value', price.DEFAULT);
+setMinFormPrice();
 
-price.element.addEventListener('invalid', onPriceInvalid);
+capacity.getProperties();
+setCurrentCapacityOptions();
 
-timeIn.element.addEventListener('change', onTimeInChange);
-
-timeOut.element.addEventListener('change', onTimeOutChange);
+addValidityEventsForm();
 
