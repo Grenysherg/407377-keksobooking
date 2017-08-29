@@ -9,40 +9,40 @@
   keyCode.ESC = 27;
 
 
-  window.data = {};
+  window.util = {};
 
-  window.data.getSign = function (signName) {
+  window.util.getSign = function (signName) {
     return sign[signName];
   };
 
-  window.data.ifEnterPressed = function (evt) {
+  window.util.ifEnterPressed = function (evt) {
     return evt.keyCode === keyCode.ENTER;
   };
 
-  window.data.ifEscPressed = function (evt) {
+  window.util.ifEscPressed = function (evt) {
     return evt.keyCode === keyCode.ESC;
   };
 
-  window.data.renderRandomInteger = function (min, max) {
+  window.util.createRandomInteger = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  window.data.getRandomArrayElement = function (array) {
-    return array[this.renderRandomInteger(0, array.length - 1)];
+  window.util.getRandomArrayElement = function (array) {
+    return array[this.createRandomInteger(0, array.length - 1)];
   };
 
-  window.data.getRandomObjectKey = function (object) {
+  window.util.getRandomObjectKey = function (object) {
     var keys = Object.keys(object);
 
-    return keys[this.renderRandomInteger(0, keys.length - 1)];
+    return keys[this.createRandomInteger(0, keys.length - 1)];
   };
 
-  window.data.getRandomUniqueArrayElements = function (array, newLength) {
+  window.util.getRandomUniqueArrayElements = function (array, newLength) {
     var element;
     var uniqueElements = [];
     var store = {};
 
-    newLength = newLength || this.renderRandomInteger(0, array.length - 1);
+    newLength = newLength || this.createRandomInteger(0, array.length - 1);
 
     for (var i = 0; i < newLength; i++) {
       do {
@@ -56,7 +56,7 @@
     return uniqueElements;
   };
 
-  window.data.sortArrayElementsRandomOrder = function (array) {
+  window.util.sortArrayElementsRandomOrder = function (array) {
     var number;
     var store;
 

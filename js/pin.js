@@ -8,7 +8,8 @@
   var pinParameter = {};
   pinParameter.WIDTH = parseInt(pinImageTemplate.getAttribute('width'), 10);
   pinParameter.HEIGHT = parseInt(pinImageTemplate.getAttribute('height'), 10);
-  pinParameter.ID_STRING = 'Pin';
+  pinParameter.DATASET_NAME = 'data-advert-element-index';
+
 
   var renderPin = function (advertElement, advertElementIndex) {
     var pinDomElement = pinTemplate.cloneNode(true);
@@ -16,7 +17,7 @@
 
     pinContainerDomElement.style.top = advertElement.location.y - pinParameter.HEIGHT + 'px';
     pinContainerDomElement.style.left = advertElement.location.x - pinParameter.WIDTH / 2 + 'px';
-    pinContainerDomElement.setAttribute('id', pinParameter.ID_STRING + advertElementIndex);
+    pinContainerDomElement.setAttribute(pinParameter.DATASET_NAME, advertElementIndex);
     pinDomElement.querySelector('.rounded').setAttribute('src', advertElement.author.avatar);
 
     return pinDomElement;
@@ -25,11 +26,11 @@
 
   window.pin = {};
 
-  window.pin.getIdString = function () {
-    return pinParameter.ID_STRING;
+  window.pin.getDatasetName = function () {
+    return pinParameter.DATASET_NAME;
   };
 
-  window.pin.renderDomElements = function (adverts) {
+  window.pin.createDomElements = function (adverts) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < adverts.length; i++) {
@@ -39,15 +40,15 @@
     pinMapDomElement.appendChild(fragment);
   };
 
-  window.pin.isCurrentDomElement = function (domElement, action) {
-    var domElementId;
+  window.pin.doActionIfDomElement = function (domElement, action) {
+    var domElementDataset;
     var activePin = pinMapDomElement.querySelector('.pin--active');
-    var activePinId = activePin ? activePin.getAttribute('id') : null;
+    var activePinDataset = activePin ? activePin.getAttribute(pinParameter.DATASET_NAME) : null;
 
     while (domElement !== pinMapDomElement) {
-      domElementId = domElement.getAttribute('id');
+      domElementDataset = domElement.getAttribute(pinParameter.DATASET_NAME);
 
-      if (domElementId && domElementId !== activePinId) {
+      if (domElementDataset && domElementDataset !== activePinDataset) {
         action(domElement);
 
         return;

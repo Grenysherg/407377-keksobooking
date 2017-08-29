@@ -46,7 +46,7 @@
   price.DEFAULT = lodgeType[currentValue.lodgeType].MIN_PRICE;
   price.MAX = Number(formPrice.getAttribute('max'));
 
-  price.setDefaultProperty = function () {
+  price.setProperties = function () {
     formPrice.setAttribute('value', this.DEFAULT);
   };
 
@@ -210,7 +210,7 @@
 
   /* Основной код */
 
-  price.setDefaultProperty();
+  price.setProperties();
   setMinFormPrice();
 
   capacity.getProperties();
