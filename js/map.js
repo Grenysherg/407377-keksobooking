@@ -43,7 +43,7 @@
   };
 
   var onPinMapEnterPress = function (evt) {
-    if (window.util.ifEnterPressed(evt)) {
+    if (window.util.isEnterPressed(evt)) {
       window.pin.doActionIfDomElement(evt.target, openOfferDialog);
     }
   };
@@ -57,13 +57,13 @@
   var onOfferDialogCloseEnterPress = function (evt) {
     evt.preventDefault();
 
-    if (window.util.ifEnterPressed(evt)) {
+    if (window.util.isEnterPressed(evt)) {
       closeOfferDialog();
     }
   };
 
   var onDocumentEscPress = function (evt) {
-    if (window.util.ifEscPressed(evt)) {
+    if (window.util.isEscPressed(evt)) {
       closeOfferDialog();
     }
   };

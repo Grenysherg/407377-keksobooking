@@ -15,11 +15,11 @@
     return sign[signName];
   };
 
-  window.util.ifEnterPressed = function (evt) {
+  window.util.isEnterPressed = function (evt) {
     return evt.keyCode === keyCode.ENTER;
   };
 
-  window.util.ifEscPressed = function (evt) {
+  window.util.isEscPressed = function (evt) {
     return evt.keyCode === keyCode.ESC;
   };
 
