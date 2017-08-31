@@ -2,9 +2,34 @@
 
 (function () {
   var pinMapDomElement = document.querySelector('.tokyo__pin-map');
+  var pinMapMainPinDomElement = pinMapDomElement.querySelector('.pin__main');
 
   var offerDialogDomElement = document.querySelector('#offer-dialog');
   var offerDialogCloseDomElement = offerDialogDomElement.querySelector('.dialog__close');
+
+  var formAddress = document.querySelector('#address');
+
+
+  var address = {};
+
+  address.x = {};
+  address.x.MIN = 300;
+  address.x.MAX = 1100;
+
+  address.y = {};
+  address.y.MIN = 200;
+  address.y.MAX = 650;
+
+
+  var pinMainAddress = {};
+
+  pinMainAddress.x = {};
+  pinMainAddress.x.MIN = address.x.MIN - window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
+  pinMainAddress.x.MAX = address.x.MAX - window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
+
+  pinMainAddress.y = {};
+  pinMainAddress.y.MIN = address.y.MIN - window.pin.getObject().main.HEIGHT;
+  pinMainAddress.y.MAX = address.y.MAX - window.pin.getObject().main.HEIGHT;
 
 
   var currentPin = null;
@@ -22,7 +47,7 @@
     }
 
     currentPin = target;
-    var currentAdvertIndex = currentPin.getAttribute(window.pin.getDatasetName());
+    var currentAdvertIndex = currentPin.getAttribute(window.pin.getObject().normal.DATASET_NAME);
 
     window.pin.addActiveState(currentPin);
     window.card.renderOfferDialog(adverts[currentAdvertIndex], window.advert.getType());
@@ -95,11 +120,74 @@
   };
 
 
+  /* Перетаскивание pin */
+
+  var getMainPinPointerAddress = function (pinX, pinY) {
+    var pointerAddress = {};
+    pointerAddress.x = pinX + window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
+    pointerAddress.y = pinY + window.pin.getObject().main.HEIGHT;
+
+    return pointerAddress;
+  };
+
+  var setFormAddress = function (pinX, pinY) {
+    var pointerAddress = getMainPinPointerAddress(pinX, pinY);
+
+    formAddress.value = 'x: ' + pointerAddress.x + ', y: ' + pointerAddress.y;
+  };
+
+  var onPinMapMainPinMouseDown = function (evt) {
+    evt.preventDefault();
+
+    var startCoordinate = {};
+    startCoordinate.x = evt.clientX;
+    startCoordinate.y = evt.clientY;
+
+    var onDocumentMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {};
+      shift.x = startCoordinate.x - moveEvt.clientX;
+      shift.y = startCoordinate.y - moveEvt.clientY;
+
+      var pinMapMainPinCoordinate = {};
+      pinMapMainPinCoordinate.top = pinMapMainPinDomElement.offsetTop - shift.y;
+      pinMapMainPinCoordinate.left = pinMapMainPinDomElement.offsetLeft - shift.x;
+
+      if (pinMapMainPinCoordinate.top < pinMainAddress.y.MIN || pinMapMainPinCoordinate.top > pinMainAddress.y.MAX || pinMapMainPinCoordinate.left < pinMainAddress.x.MIN || pinMapMainPinCoordinate.left > pinMainAddress.x.MAX) {
+        return;
+      }
+
+      startCoordinate.x = moveEvt.clientX;
+      startCoordinate.y = moveEvt.clientY;
+
+      pinMapMainPinDomElement.style.top = pinMapMainPinCoordinate.top + 'px';
+      pinMapMainPinDomElement.style.left = pinMapMainPinCoordinate.left + 'px';
+
+      setFormAddress(pinMapMainPinCoordinate.left, pinMapMainPinCoordinate.top);
+    };
+
+    var onDocumentMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onDocumentMouseMove);
+      document.removeEventListener('mouseup', onDocumentMouseUp);
+    };
+
+    document.addEventListener('mousemove', onDocumentMouseMove);
+    document.addEventListener('mouseup', onDocumentMouseUp);
+  };
+
+
   /* Основной код */
 
-  var adverts = window.advert.createArray();
+  var adverts = window.advert.createArray(address);
   window.pin.createDomElements(adverts);
 
   addEventsPinMap();
-  openOfferDialog(pinMapDomElement.querySelector('[' + window.pin.getDatasetName() + '="' + ADVERT_INITIAL_ELEMENT_INDEX + '"]'));
+  openOfferDialog(pinMapDomElement.querySelector('[' + window.pin.getObject().normal.DATASET_NAME + '="' + ADVERT_INITIAL_ELEMENT_INDEX + '"]'));
+
+  setFormAddress(parseInt(getComputedStyle(pinMapMainPinDomElement).top, 10), parseInt(getComputedStyle(pinMapMainPinDomElement).left, 10));
+
+  pinMapMainPinDomElement.addEventListener('mousedown', onPinMapMainPinMouseDown);
 })();
