@@ -27,6 +27,10 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  window.util.getHalfInteger = function (integer) {
+    return Math.round(integer / 2);
+  };
+
   window.util.getRandomArrayElement = function (array) {
     return array[this.createRandomInteger(0, array.length - 1)];
   };

@@ -8,14 +8,6 @@
   generatedAdvertParameter.avatar = {};
   generatedAdvertParameter.avatar.NUMBER_MIN = 1;
 
-  generatedAdvertParameter.locationX = {};
-  generatedAdvertParameter.locationX.MIN = 300;
-  generatedAdvertParameter.locationX.MAX = 900;
-
-  generatedAdvertParameter.locationY = {};
-  generatedAdvertParameter.locationY.MIN = 100;
-  generatedAdvertParameter.locationY.MAX = 500;
-
   generatedAdvertParameter.TITLES = [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
@@ -47,7 +39,7 @@
   generatedAdvertParameter.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
 
-  var createAdvertElement = function (avatarNumber, offerTitle) {
+  var createAdvertElement = function (avatarNumber, offerTitle, address) {
     var advertElement = {};
 
     advertElement.author = {};
@@ -55,8 +47,8 @@
     advertElement.author.avatar = 'img/avatars/user' + avatarNumber + '.png';
 
     advertElement.location = {};
-    advertElement.location.x = window.util.createRandomInteger(generatedAdvertParameter.locationX.MIN, generatedAdvertParameter.locationX.MAX);
-    advertElement.location.y = window.util.createRandomInteger(generatedAdvertParameter.locationY.MIN, generatedAdvertParameter.locationY.MAX);
+    advertElement.location.x = window.util.createRandomInteger(address.x.MIN, address.x.MAX);
+    advertElement.location.y = window.util.createRandomInteger(address.y.MIN, address.y.MAX);
 
     advertElement.offer = {};
     advertElement.offer.title = offerTitle;
@@ -81,13 +73,13 @@
     return generatedAdvertParameter.TYPE;
   };
 
-  window.advert.createArray = function () {
+  window.advert.createArray = function (address) {
     var adverts = [];
 
     var offerTitles = window.util.sortArrayElementsRandomOrder(generatedAdvertParameter.TITLES.concat());
 
     for (var i = 0; i < generatedAdvertParameter.AMOUNT; i++) {
-      adverts[i] = createAdvertElement(generatedAdvertParameter.avatar.NUMBER_MIN + i, offerTitles[i]);
+      adverts[i] = createAdvertElement(generatedAdvertParameter.avatar.NUMBER_MIN + i, offerTitles[i], address);
     }
 
     return adverts;
