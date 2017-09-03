@@ -4,6 +4,10 @@
   window.data = {};
 
 
+  window.data.sign = {};
+  window.data.sign.RUBLE = String.fromCharCode(8381);
+
+
   window.data.offerTitle = {};
   window.data.offerTitle.MIN_LENGTH = 30;
   window.data.offerTitle.MAX_LENGTH = 100;

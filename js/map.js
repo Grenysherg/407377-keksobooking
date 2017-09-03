@@ -24,8 +24,8 @@
   var pinMainAddress = {};
 
   pinMainAddress.x = {};
-  pinMainAddress.x.MIN = address.x.MIN - window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
-  pinMainAddress.x.MAX = address.x.MAX - window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
+  pinMainAddress.x.MIN = address.x.MIN - window.utility.getHalfInteger(window.pin.getObject().main.WIDTH);
+  pinMainAddress.x.MAX = address.x.MAX - window.utility.getHalfInteger(window.pin.getObject().main.WIDTH);
 
   pinMainAddress.y = {};
   pinMainAddress.y.MIN = address.y.MIN - window.pin.getObject().main.HEIGHT;
@@ -68,7 +68,7 @@
   };
 
   var onPinMapEnterPress = function (evt) {
-    if (window.util.isEnterPressed(evt)) {
+    if (window.key.isEnterPressed(evt)) {
       window.pin.doActionIfDomElement(evt.target, openOfferDialog);
     }
   };
@@ -82,13 +82,13 @@
   var onOfferDialogCloseEnterPress = function (evt) {
     evt.preventDefault();
 
-    if (window.util.isEnterPressed(evt)) {
+    if (window.key.isEnterPressed(evt)) {
       closeOfferDialog();
     }
   };
 
   var onDocumentEscPress = function (evt) {
-    if (window.util.isEscPressed(evt)) {
+    if (window.key.isEscPressed(evt)) {
       closeOfferDialog();
     }
   };
@@ -124,7 +124,7 @@
 
   var getMainPinPointerAddress = function (pinX, pinY) {
     var pointerAddress = {};
-    pointerAddress.x = pinX + window.util.getHalfInteger(window.pin.getObject().main.WIDTH);
+    pointerAddress.x = pinX + window.utility.getHalfInteger(window.pin.getObject().main.WIDTH);
     pointerAddress.y = pinY + window.pin.getObject().main.HEIGHT;
 
     return pointerAddress;

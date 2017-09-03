@@ -28,7 +28,7 @@
 
     newOfferDialogPanelDomElement.querySelector('.lodge__title').textContent = advertElement.offer.title;
     newOfferDialogPanelDomElement.querySelector('.lodge__address').textContent = advertElement.offer.address;
-    newOfferDialogPanelDomElement.querySelector('.lodge__price').textContent = advertElement.offer.price + window.util.getSign('RUBLE') + '/ночь';
+    newOfferDialogPanelDomElement.querySelector('.lodge__price').textContent = advertElement.offer.price + window.data.sign.RUBLE + '/ночь';
     newOfferDialogPanelDomElement.querySelector('.lodge__type').textContent = advertTypes[advertElement.offer.type];
     newOfferDialogPanelDomElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + advertElement.offer.guests + ' гостей в ' + advertElement.offer.rooms + ' комнатах';
     newOfferDialogPanelDomElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advertElement.offer.checkin + ', выезд до ' + advertElement.offer.checkout;

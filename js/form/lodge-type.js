@@ -11,6 +11,6 @@
   window.formLodgeType = {};
 
   window.formLodgeType.onThisChange = function () {
-    window.globalModulesSynchronizeFields(typeField, priceField, types, minPrices, window.formUtility.setFieldMinNumber);
+    window.synchronizeDomFields(typeField, priceField, types, minPrices, window.formUtility.setFieldMinNumber);
   };
 })();

@@ -47,19 +47,19 @@
     advertElement.author.avatar = 'img/avatars/user' + avatarNumber + '.png';
 
     advertElement.location = {};
-    advertElement.location.x = window.util.createRandomInteger(address.x.MIN, address.x.MAX);
-    advertElement.location.y = window.util.createRandomInteger(address.y.MIN, address.y.MAX);
+    advertElement.location.x = window.utility.createRandomInteger(address.x.MIN, address.x.MAX);
+    advertElement.location.y = window.utility.createRandomInteger(address.y.MIN, address.y.MAX);
 
     advertElement.offer = {};
     advertElement.offer.title = offerTitle;
     advertElement.offer.address = advertElement.location.x + ', ' + advertElement.location.y;
-    advertElement.offer.price = window.util.createRandomInteger(generatedAdvertParameter.price.MIN, generatedAdvertParameter.price.MAX);
-    advertElement.offer.type = window.util.getRandomObjectKey(generatedAdvertParameter.TYPE);
-    advertElement.offer.rooms = window.util.createRandomInteger(generatedAdvertParameter.room.MIN, generatedAdvertParameter.room.MAX);
-    advertElement.offer.guests = window.util.createRandomInteger(generatedAdvertParameter.guest.MIN, advertElement.offer.rooms);
-    advertElement.offer.checkin = window.util.getRandomArrayElement(generatedAdvertParameter.CHECKIN_TIME);
-    advertElement.offer.checkout = window.util.getRandomArrayElement(generatedAdvertParameter.CHECKOUT_TIME);
-    advertElement.offer.features = window.util.getRandomUniqueArrayElements(generatedAdvertParameter.FEATURES);
+    advertElement.offer.price = window.utility.createRandomInteger(generatedAdvertParameter.price.MIN, generatedAdvertParameter.price.MAX);
+    advertElement.offer.type = window.utility.getObjectRandomKey(generatedAdvertParameter.TYPE);
+    advertElement.offer.rooms = window.utility.createRandomInteger(generatedAdvertParameter.room.MIN, generatedAdvertParameter.room.MAX);
+    advertElement.offer.guests = window.utility.createRandomInteger(generatedAdvertParameter.guest.MIN, advertElement.offer.rooms);
+    advertElement.offer.checkin = window.utility.getArrayRandomElement(generatedAdvertParameter.CHECKIN_TIME);
+    advertElement.offer.checkout = window.utility.getArrayRandomElement(generatedAdvertParameter.CHECKOUT_TIME);
+    advertElement.offer.features = window.utility.getRandomUniqueArray(generatedAdvertParameter.FEATURES);
     advertElement.offer.description = '';
     advertElement.offer.photos = [];
 
@@ -76,7 +76,7 @@
   window.advert.createArray = function (address) {
     var adverts = [];
 
-    var offerTitles = window.util.sortArrayElementsRandomOrder(generatedAdvertParameter.TITLES.concat());
+    var offerTitles = window.utility.sortArrayInRandomOrder(generatedAdvertParameter.TITLES.concat());
 
     for (var i = 0; i < generatedAdvertParameter.AMOUNT; i++) {
       adverts[i] = createAdvertElement(generatedAdvertParameter.avatar.NUMBER_MIN + i, offerTitles[i], address);
