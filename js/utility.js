@@ -60,4 +60,9 @@
 
     return objectKeys[arrayRandomIndex];
   };
+
+
+  window.utility.getLocationString = function (coordinateX, coordinateY) {
+    return 'x: ' + coordinateX + ', y: ' + coordinateY;
+  };
 })();

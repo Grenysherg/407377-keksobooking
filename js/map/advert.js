@@ -49,7 +49,7 @@
 
     advert.offer = {};
     advert.offer.title = titleString;
-    advert.offer.address = advert.location.x + ', ' + advert.location.y;
+    advert.offer.address = window.utility.getLocationString(advert.location.x, advert.location.y);
     advert.offer.price = window.utility.createRandomInteger(minPriceNumber, window.data.advert.price.MAX);
     advert.offer.type = lodgeTypeString;
     advert.offer.rooms = roomAmount;
@@ -64,9 +64,9 @@
   };
 
 
-  window.advert = {};
+  window.mapAdvert = {};
 
-  window.advert.createArray = function () {
+  window.mapAdvert.createArray = function () {
     var adverts = [];
 
     var titles = window.utility.sortArrayInRandomOrder(Object.keys(generatedAdvert.title));

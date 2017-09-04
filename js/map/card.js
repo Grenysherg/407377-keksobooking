@@ -20,9 +20,9 @@
   };
 
 
-  window.card = {};
+  window.mapCard = {};
 
-  window.card.renderDomElement = function (advert) {
+  window.mapCard.renderDomElement = function (advert) {
     var domCardPanel = domCard.querySelector('.dialog__panel');
     var newDomCardPanel = lodgeTemplate.cloneNode(true);
 

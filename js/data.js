@@ -4,10 +4,8 @@
   window.data = {};
 
 
-
   window.data.sign = {};
   window.data.sign.RUBLE = String.fromCharCode(8381);
-
 
 
   window.data.advert = {};
