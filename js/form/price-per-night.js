@@ -8,7 +8,7 @@
   var minPrices = window.formUtility.getMinPrices();
 
 
-  window.globalModulesSynchronizeFields(typeField, priceField, types, minPrices, window.formUtility.setFieldMinNumber);
+  window.synchronizeDomFields(typeField, priceField, types, minPrices, window.formUtility.setFieldMinNumber);
 
 
   window.formPricePerNight = {};

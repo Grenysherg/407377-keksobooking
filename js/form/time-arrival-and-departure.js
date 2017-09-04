@@ -5,16 +5,16 @@
   var timeOutField = window.formData.field.timeOut;
 
 
-  window.synchronizeDomFields(timeInField, timeOutField, window.data.timeIn.VALUES, window.data.timeOut.VALUES, window.formUtility.setFieldValue);
+  window.synchronizeDomFields(timeInField, timeOutField, window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, window.formUtility.setFieldValue);
 
 
   window.formTimeArrivalAndDeparture = {};
 
   window.formTimeArrivalAndDeparture.onTimeInChange = function () {
-    window.synchronizeDomFields(timeInField, timeOutField, window.data.timeIn.VALUES, window.data.timeOut.VALUES, window.formUtility.setFieldValue);
+    window.synchronizeDomFields(timeInField, timeOutField, window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, window.formUtility.setFieldValue);
   };
 
   window.formTimeArrivalAndDeparture.onTimeOutChange = function () {
-    window.synchronizeDomFields(timeOutField, timeInField, window.data.timeOut.VALUES, window.data.timeIn.VALUES, window.formUtility.setFieldValue);
+    window.synchronizeDomFields(timeOutField, timeInField, window.data.advert.timeOut.VALUES, window.data.advert.timeIn.VALUES, window.formUtility.setFieldValue);
   };
 })();

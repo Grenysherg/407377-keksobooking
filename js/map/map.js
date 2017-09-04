@@ -50,7 +50,7 @@
     var currentAdvertIndex = currentPin.getAttribute(window.pin.getObject().normal.DATASET_NAME);
 
     window.pin.addActiveState(currentPin);
-    window.card.renderOfferDialog(adverts[currentAdvertIndex], window.advert.getType());
+    window.card.renderDomElement(adverts[currentAdvertIndex]);
   };
 
   var closeOfferDialog = function () {
@@ -182,7 +182,7 @@
   /* Основной код */
 
   var adverts = window.advert.createArray(address);
-  window.pin.createDomElements(adverts);
+  window.pin.renderCollection(adverts);
 
   addEventsPinMap();
   openOfferDialog(pinMapDomElement.querySelector('[' + window.pin.getObject().normal.DATASET_NAME + '="' + ADVERT_INITIAL_ELEMENT_INDEX + '"]'));

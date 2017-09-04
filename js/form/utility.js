@@ -32,7 +32,7 @@
 
 
   window.formUtility.getTypes = function () {
-    return Object.keys(window.data.lodgeType);
+    return Object.keys(window.data.advert.lodgeType);
   };
 
   window.formUtility.getMinPrices = function () {
