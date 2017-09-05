@@ -14,7 +14,6 @@
   window.data.advert.title.MIN_LENGTH = 30;
   window.data.advert.title.MAX_LENGTH = 100;
 
-
   window.data.advert.lodgeType = {};
 
   window.data.advert.lodgeType.bungalo = {};
@@ -33,10 +32,8 @@
   window.data.advert.lodgeType.palace.VALUE = 'Дворец';
   window.data.advert.lodgeType.palace.MIN_PRICE = 10000;
 
-
   window.data.advert.price = {};
   window.data.advert.price.MAX = 1000000;
-
 
   window.data.advert.room = {};
   window.data.advert.room['1'] = '1 комната';
@@ -46,7 +43,6 @@
 
   window.data.advert.capacity = {};
   window.data.advert.capacity.VALUES = ['не для гостей', 'для 1 гостя', 'для 2 гостей', 'для 3 гостей'];
-
 
   window.data.advert.timeIn = {};
   window.data.advert.timeIn.VALUES = ['12:00', '13:00', '14:00'];

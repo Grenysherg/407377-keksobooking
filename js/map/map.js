@@ -8,6 +8,28 @@
   var domCardClose = domCard.querySelector('.dialog__close');
 
 
+  /* utilities */
+
+
+  var addPinMapEvents = function () {
+    domPinMap.addEventListener('click', onPinMapClick);
+    domPinMap.addEventListener('keydown', onPinMapEnterPress);
+  };
+
+  var addCardCloseEvents = function () {
+    domCardClose.addEventListener('click', onCardCloseClick);
+    domCardClose.addEventListener('keydown', onCardCloseEnterPress);
+  };
+
+  var removeCardCloseEvents = function () {
+    domCardClose.removeEventListener('click', onCardCloseClick);
+    domCardClose.removeEventListener('keydown', onCardCloseEnterPress);
+  };
+
+
+  /* Открытие/закрытие окна карточки */
+
+
   var openCard = function (domPin) {
     var domActivePin = domPinMap.querySelector('.pin--active');
 
@@ -20,10 +42,10 @@
       document.addEventListener('keydown', onDocumentEscPress);
     }
 
-    var advertsCurrentElementIndex = domPin.getAttribute(window.mapPin.getDatasetName());
+    var advertsElementIndex = domPin.getAttribute(window.mapPin.getDatasetName());
 
     window.mapPin.addActiveState(domPin);
-    window.mapCard.renderDomElement(adverts[advertsCurrentElementIndex]);
+    window.mapCard.renderElement(adverts[advertsElementIndex]);
   };
 
   var closeCard = function () {
@@ -35,6 +57,9 @@
     removeCardCloseEvents();
     document.removeEventListener('keydown', onDocumentEscPress);
   };
+
+
+  /* Обработчики событий */
 
 
   var onPinMapClick = function (evt) {
@@ -68,27 +93,14 @@
   };
 
 
-  var addPinMapEvents = function () {
-    domPinMap.addEventListener('click', onPinMapClick);
-    domPinMap.addEventListener('keydown', onPinMapEnterPress);
-  };
-
-  var addCardCloseEvents = function () {
-    domCardClose.addEventListener('click', onCardCloseClick);
-    domCardClose.addEventListener('keydown', onCardCloseEnterPress);
-  };
-
-  var removeCardCloseEvents = function () {
-    domCardClose.removeEventListener('click', onCardCloseClick);
-    domCardClose.removeEventListener('keydown', onCardCloseEnterPress);
-  };
+  /* main */
 
 
   var adverts = window.mapAdvert.createArray();
   window.mapPin.renderCollection(adverts);
 
   addPinMapEvents();
-  domMainPin.addEventListener('mousedown', window.mapPin.onMainPinClick);
+  domMainPin.addEventListener('mousedown', window.mapPin.onMainClick);
 
   openCard(domPinMap.children[1]);
 })();

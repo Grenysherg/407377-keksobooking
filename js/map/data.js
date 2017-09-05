@@ -3,7 +3,6 @@
 (function () {
   window.mapData = {};
 
-
   window.mapData.address = {};
 
   window.mapData.address.x = {};

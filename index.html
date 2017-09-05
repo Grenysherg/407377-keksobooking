@@ -129,8 +129,8 @@
             <div class="form__element">
               <label for="type">Тип жилья</label>
               <select id="type" name="type">
+                <option value="bungalo">Бунгало</option>
                 <option value="flat" selected>Квартира</option>
-                <option value="bungalo">Лачуга</option>
                 <option value="house">Дом</option>
                 <option value="palace">Дворец</option>
               </select>
@@ -286,10 +286,12 @@
 </template>
   
   <script src="js/data.js"></script>
-  <script src="js/key.js"></script>
-  <script src="js/utility.js"></script>
   
-  <script src="js/global-modules/synchronize-dom-fields.js"></script>
+  <script src="js/modules/key.js"></script>
+  <script src="js/modules/utility.js"></script>
+  
+  <script src="js/modules/synchronize-inputs.js"></script>
+  <script src="js/modules/drag-free-element.js"></script>
   
   <script src="js/map/data.js"></script>
   <script src="js/map/advert.js"></script>
@@ -297,14 +299,6 @@
   <script src="js/map/card.js"></script>
   <script src="js/map/map.js"></script>
   
-  <script src="js/form/data.js"></script>
-  <script src="js/form/utility.js"></script>
-  <script src="js/form/offer-title.js"></script>
-  <script src="js/form/lodge-type.js"></script>
-  <script src="js/form/price-per-night.js"></script>
-  <script src="js/form/room-amount-and-capacity.js"></script>
-  <script src="js/form/address.js"></script>
-  <script src="js/form/time-arrival-and-departure.js"></script>
   <script src="js/form/form.js"></script>
 </body>
 </html>

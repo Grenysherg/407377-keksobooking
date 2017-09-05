@@ -20,6 +20,7 @@
 
   generatedAdvert.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
+
   var getCapacity = function (rooms, roomsElementIndex) {
     if (roomsElementIndex === rooms.length - 1) {
       return 0;
@@ -68,7 +69,6 @@
 
   window.mapAdvert.createArray = function () {
     var adverts = [];
-
     var titles = window.utility.sortArrayInRandomOrder(Object.keys(generatedAdvert.title));
 
     for (var i = 0; i < generatedAdvert.AMOUNT; i++) {

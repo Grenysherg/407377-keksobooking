@@ -13,20 +13,20 @@
   };
 
 
-  window.utility.getRandomUniqueArray = function (array, newArrayLength) {
+  window.utility.getRandomUniqueArray = function (array, uniqueArrayLength) {
     var element = null;
     var uniqueArray = [];
-    var existingArrayElement = {};
+    var uniqueArrayExistingElement = {};
 
-    newArrayLength = newArrayLength || this.createRandomInteger(0, array.length - 1);
+    uniqueArrayLength = uniqueArrayLength || this.createRandomInteger(0, array.length - 1);
 
-    for (var i = 0; i < newArrayLength; i++) {
+    for (var i = 0; i < uniqueArrayLength; i++) {
       do {
         element = this.getArrayRandomElement(array);
-      } while (existingArrayElement[String(element)]);
+      } while (uniqueArrayExistingElement[String(element)]);
 
       uniqueArray[i] = element;
-      existingArrayElement[String(element)] = true;
+      uniqueArrayExistingElement[String(element)] = true;
     }
 
     return uniqueArray;
