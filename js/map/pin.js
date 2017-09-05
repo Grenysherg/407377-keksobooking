@@ -23,7 +23,8 @@
   mainPinDragArea.maxY = window.mapData.address.y.MAX - pin.main.HEIGHT;
 
   var mainPinPointerLocation = {};
-  mainPinPointerLocation.x = parseInt(getComputedStyle(domMainPin).left, 10) + window.utility.getHalfInteger(pin.main.WIDTH);
+  mainPinPointerLocation.x = parseInt(getComputedStyle(domMainPin).left, 10)
+      + window.utility.getHalfInteger(pin.main.WIDTH);
   mainPinPointerLocation.y = parseInt(getComputedStyle(domMainPin).top, 10) + pin.main.HEIGHT;
 
 

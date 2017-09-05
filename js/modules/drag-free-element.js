@@ -21,7 +21,8 @@
       elementOffset.left = domElement.offsetLeft - shift.x;
 
       if (dragArea) {
-        if (elementOffset.top < dragArea.minY || elementOffset.top > dragArea.maxY || elementOffset.left < dragArea.minX || elementOffset.left > dragArea.maxX) {
+        if (elementOffset.top < dragArea.minY || elementOffset.top > dragArea.maxY
+            || elementOffset.left < dragArea.minX || elementOffset.left > dragArea.maxX) {
           return;
         }
       }

@@ -31,8 +31,10 @@
     domCardNewPanel.querySelector('.lodge__address').textContent = advert.offer.address;
     domCardNewPanel.querySelector('.lodge__price').textContent = advert.offer.price + window.data.sign.RUBLE + '/ночь';
     domCardNewPanel.querySelector('.lodge__type').textContent = window.data.advert.lodgeType[advert.offer.type].VALUE;
-    domCardNewPanel.querySelector('.lodge__rooms-and-guests').textContent = window.data.advert.room[advert.offer.rooms] + ' ' + window.data.advert.capacity.VALUES[advert.offer.guests];
-    domCardNewPanel.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
+    domCardNewPanel.querySelector('.lodge__rooms-and-guests').textContent = window.data.advert.room[advert.offer.rooms]
+        + ' ' + window.data.advert.capacity.VALUES[advert.offer.guests];
+    domCardNewPanel.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin
+        + ', выезд до ' + advert.offer.checkout;
     domCardNewPanel.querySelector('.lodge__features').appendChild(renderFeatures(advert.offer.features));
     domCardNewPanel.querySelector('.lodge__description').textContent = advert.offer.description;
     domCard.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
