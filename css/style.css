@@ -85,7 +85,7 @@ select option:hover {
 .system-message {
   box-sizing: border-box;
   
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -115,7 +115,7 @@ select option:hover {
 }
 
 .system-message__close {
-  box-sizing: border-box;
+  box-sizing: inherit;
   
   position: relative;
   

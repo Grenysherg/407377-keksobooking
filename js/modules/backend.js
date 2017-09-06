@@ -10,7 +10,7 @@
     xhr.responseType = 'json';
 
     var onXhrLoad = function () {
-      if (xhr.status !== status['ok']) {
+      if (xhr.status === status['ok']) {
         onSuccess(xhr.response);
       } else {
         onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);

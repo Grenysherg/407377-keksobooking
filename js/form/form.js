@@ -11,8 +11,6 @@
   var timeInInput = domForm.querySelector('#timein');
   var timeOutInput = domForm.querySelector('#timeout');
 
-  var ACTION_URL = domForm.getAttribute('action');
-
   var validationMessage = {};
   validationMessage.EMPTY_FIELD = 'Обязательное поле';
 
@@ -200,12 +198,18 @@
 
   /* Отправка формы */
 
-  var resetForm = function () {
-    domForm.reset();
-  };
-
   var onFormSubmit = function (evt) {
-    window.backend.save(ACTION_URL, new FormData(domForm), resetForm);
+    window.backend.save(
+        domForm.getAttribute('action'),
+        new FormData(domForm),
+        function () {
+          domForm.reset();
+          
+          window.utility.showSystemMessage('Данные формы отправлены успешно', 'success');
+        },
+        function () {
+          window.utility.showSystemMessage('Произошла ошибка при отправке формы', 'error');
+        });
 
     evt.preventDefault();
   };
