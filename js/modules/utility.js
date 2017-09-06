@@ -65,4 +65,35 @@
   window.utility.getLocationString = function (coordinateX, coordinateY) {
     return 'x: ' + coordinateX + ', y: ' + coordinateY;
   };
+
+
+  window.utility.renderImg = function (img) {
+    var domImg = document.createElement('img');
+
+    domImg.setAttribute('src', img.src);
+    domImg.setAttribute('alt', img.alt);
+    domImg.setAttribute('width', img.width);
+    domImg.setAttribute('height', img.height);
+
+    return domImg;
+  };
+
+  window.utility.showSystemMessage = function (text, stateString) {
+    var domSystemMessage = document.querySelector('.system-message');
+    var domSystemMessageClose = domSystemMessage.querySelector('.system-message__close');
+
+    domSystemMessage.classList.add('system-message--' + stateString);
+    domSystemMessage.classList.remove('hidden');
+    domSystemMessage.querySelector('.system-message__text').textContent = text;
+
+
+    var onSystemMessageCloseClick = function () {
+      domSystemMessage.classList.add('hidden');
+      domSystemMessage.classList.remove('system-message--' + stateString);
+
+      domSystemMessageClose.removeEventListener('click', onSystemMessageCloseClick);
+    };
+
+    domSystemMessageClose.addEventListener('click', onSystemMessageCloseClick);
+  };
 })();

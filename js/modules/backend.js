@@ -4,16 +4,13 @@
   var status = {};
   status['ok'] = 200;
 
-  var xhr = new XMLHttpRequest();
 
-  xhr.responseType = 'json';
+  var setup = function (onSuccess, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
 
-
-  window.backend = {};
-
-  window.backend.load = function (url, onSuccess, onError) {
     var onXhrLoad = function () {
-      if (xhr.status === status['ok']) {
+      if (xhr.status !== status['ok']) {
         onSuccess(xhr.response);
       } else {
         onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
@@ -32,13 +29,23 @@
     xhr.addEventListener('error', onXhrError);
     xhr.addEventListener('timeout', onXhrTimeout);
 
-    xhr.timeout = 10000;
+    return xhr;
+  };
+
+
+  window.backend = {};
+
+  window.backend.load = function (url, onSuccess, onError) {
+    var xhr = setup(onSuccess, onError);
 
     xhr.open('GET', url);
     xhr.send();
   };
 
-  window.backend.save = function () {
+  window.backend.save = function (url, data, onSuccess, onError) {
+    var xhr = setup(onSuccess, onError);
 
+    xhr.open('POST', url);
+    xhr.send(data);
   };
 })();

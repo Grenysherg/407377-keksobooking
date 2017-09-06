@@ -4,11 +4,6 @@
   var domCard = document.querySelector('#offer-dialog');
   var lodgeTemplate = document.querySelector('#lodge-template').content;
 
-  var lodgePhoto = {};
-  lodgePhoto.ALT = 'Lodge photo';
-  lodgePhoto.WIDTH = 52;
-  lodgePhoto.HEIGHT = 42;
-
 
   var renderFeatures = function (features) {
     var domFeature = null;
@@ -24,21 +19,19 @@
     return fragment;
   };
 
-  var renderImg = function (src, alt, width, height) {
-    var domImg = document.createElement('img');
-    domImg.setAttribute('src', src);
-    domImg.setAttribute('alt', alt);
-    domImg.setAttribute('width', width);
-    domImg.setAttribute('height', height);
-
-    return domImg;
-  };
-
-  var renderLodgePhotos = function (photoSources) {
+  var renderPreviewLodgePhotos = function (photoSources) {
     var fragment = document.createDocumentFragment();
 
+    var img = {};
+    img.alt = window.data.advert.previewLodgePhoto.ALT;
+    img.width = window.data.advert.previewLodgePhoto.WIDTH;
+    img.height = window.data.advert.previewLodgePhoto.HEIGHT;
+
+
     photoSources.forEach(function (it) {
-      fragment.appendChild(renderImg(it, lodgePhoto.ALT, lodgePhoto.WIDTH, lodgePhoto.HEIGHT));
+      img.src = it;
+
+      fragment.appendChild(window.utility.renderImg(img));
     });
 
     return fragment;
@@ -69,7 +62,7 @@
       + ', выезд до ' + advert.offer.checkout;
     domCardNewPanel.querySelector('.lodge__features').appendChild(renderFeatures(advert.offer.features));
     domCardNewPanel.querySelector('.lodge__description').textContent = advert.offer.description;
-    domCardNewPanel.querySelector('.lodge__photos').appendChild(renderLodgePhotos(advert.offer.photos));
+    domCardNewPanel.querySelector('.lodge__photos').appendChild(renderPreviewLodgePhotos(advert.offer.photos));
 
     domCard.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
     domCard.replaceChild(domCardNewPanel, domCardPanel);

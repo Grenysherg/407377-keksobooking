@@ -11,6 +11,8 @@
   var timeInInput = domForm.querySelector('#timein');
   var timeOutInput = domForm.querySelector('#timeout');
 
+  var ACTION_URL = domForm.getAttribute('action');
+
   var validationMessage = {};
   validationMessage.EMPTY_FIELD = 'Обязательное поле';
 
@@ -57,6 +59,8 @@
 
     timeInInput.addEventListener('change', onTimeInChange);
     timeOutInput.addEventListener('change', onTimeOutChange);
+
+    domForm.addEventListener('submit', onFormSubmit);
   };
 
 
@@ -191,6 +195,19 @@
   var onTimeOutChange = function () {
     window.synchronizeInputs(timeInInput, timeOutInput,
         window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
+  };
+
+
+  /* Отправка формы */
+
+  var resetForm = function () {
+    domForm.reset();
+  };
+
+  var onFormSubmit = function (evt) {
+    window.backend.save(ACTION_URL, new FormData(domForm), resetForm);
+
+    evt.preventDefault();
   };
 
 

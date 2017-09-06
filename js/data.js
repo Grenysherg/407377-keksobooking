@@ -50,4 +50,9 @@
 
   window.data.advert.timeOut = {};
   window.data.advert.timeOut.VALUES = ['12:00', '13:00', '14:00'];
+
+  window.data.advert.previewLodgePhoto = {};
+  window.data.advert.previewLodgePhoto.ALT = 'Lodge photo';
+  window.data.advert.previewLodgePhoto.WIDTH = 52;
+  window.data.advert.previewLodgePhoto.HEIGHT = 42;
 })();

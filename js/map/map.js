@@ -101,22 +101,21 @@
   var onSuccess = function (loadAdverts) {
     adverts = adverts.concat(loadAdverts);
     window.mapPin.renderCollection(adverts);
+
+    openCard(domPinMap.children[1]);
   };
 
   var onError = function (errorMessage) {
-    console.log(errorMessage);
+    window.utility.showSystemMessage(errorMessage, 'error');
   };
 
 
   /* main */
 
 
-  var adverts = window.mapAdvert.createArray();
-
-  window.backend.load(url, onSuccess, onError);
-
   addPinMapEvents();
   domMainPin.addEventListener('mousedown', window.mapPin.onMainClick);
 
-  openCard(domPinMap.children[1]);
+  var adverts = window.mapAdvert.createArray();
+  window.backend.load(url, onSuccess, onError);
 })();
