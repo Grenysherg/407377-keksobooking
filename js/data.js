@@ -33,6 +33,7 @@
   window.data.advert.lodgeType.palace.MIN_PRICE = 10000;
 
   window.data.advert.price = {};
+  window.data.advert.price.MIN = 0;
   window.data.advert.price.MAX = 1000000;
 
   window.data.advert.room = {};

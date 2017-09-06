@@ -8,35 +8,29 @@
   generatedAdvert.avatar = {};
   generatedAdvert.avatar.MIN_NUMBER = 1;
 
-  generatedAdvert.title = {};
-  generatedAdvert.title['Неуютное бунгало по колено в воде'] = 'bungalo';
-  generatedAdvert.title['Уютное бунгало далеко от моря'] = 'bungalo';
-  generatedAdvert.title['Маленькая неуютная квартира'] = 'flat';
-  generatedAdvert.title['Большая уютная квартира'] = 'flat';
-  generatedAdvert.title['Некрасивый негостеприимный домик'] = 'house';
-  generatedAdvert.title['Красивый гостевой домик'] = 'house';
-  generatedAdvert.title['Маленький ужасный дворец'] = 'palace';
-  generatedAdvert.title['Огромный прекрасный дворец'] = 'palace';
+  generatedAdvert.TITLES = [
+    'Неуютное бунгало по колено в воде',
+    'Уютное бунгало далеко от моря',
+    'Маленькая неуютная квартира',
+    'Большая уютная квартира',
+    'Некрасивый негостеприимный домик',
+    'Красивый гостевой домик',
+    'Маленький ужасный дворец',
+    'Огромный прекрасный дворец'
+  ];
+
+  generatedAdvert.room = {};
+  generatedAdvert.room.MIN = 1;
+  generatedAdvert.room.MAX = 5;
+
+  generatedAdvert.capacity = {};
+  generatedAdvert.capacity.MIN = 1;
 
   generatedAdvert.FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
 
-  var getCapacity = function (rooms, roomsElementIndex) {
-    if (roomsElementIndex === rooms.length - 1) {
-      return 0;
-    }
-
-    return window.utility.createRandomInteger(1, roomsElementIndex);
-  };
-
   var createAdvert = function (avatarNumber, titleString) {
     var advert = {};
-
-    var lodgeTypeString = generatedAdvert.title[titleString];
-    var minPriceNumber = window.data.advert.lodgeType[lodgeTypeString].MIN_PRICE;
-    var rooms = Object.keys(window.data.advert.room);
-    var roomAmount = window.utility.getArrayRandomElement(rooms);
-    var roomsElementIndex = rooms.indexOf(roomAmount);
 
     avatarNumber = avatarNumber < 10 ? '0' + avatarNumber : avatarNumber;
 
@@ -51,12 +45,12 @@
     advert.offer = {};
     advert.offer.title = titleString;
     advert.offer.address = window.utility.getLocationString(advert.location.x, advert.location.y);
-    advert.offer.price = window.utility.createRandomInteger(minPriceNumber, window.data.advert.price.MAX);
-    advert.offer.type = lodgeTypeString;
-    advert.offer.rooms = roomAmount;
-    advert.offer.guests = getCapacity(rooms, roomsElementIndex);
+    advert.offer.price = window.utility.createRandomInteger(window.data.advert.price.MIN, window.data.advert.price.MAX);
+    advert.offer.type = window.utility.getArrayRandomElement(Object.keys(window.data.advert.lodgeType));
+    advert.offer.rooms = window.utility.createRandomInteger(generatedAdvert.room.MIN, generatedAdvert.room.MAX);
+    advert.offer.guests = window.utility.createRandomInteger(generatedAdvert.capacity.MIN, advert.offer.rooms);
     advert.offer.checkin = window.utility.getArrayRandomElement(window.data.advert.timeIn.VALUES);
-    advert.offer.checkout = advert.offer.checkin;
+    advert.offer.checkout = window.utility.getArrayRandomElement(window.data.advert.timeOut.VALUES);
     advert.offer.features = window.utility.getRandomUniqueArray(generatedAdvert.FEATURES);
     advert.offer.description = '';
     advert.offer.photos = [];
@@ -69,7 +63,7 @@
 
   window.mapAdvert.createArray = function () {
     var adverts = [];
-    var titles = window.utility.sortArrayInRandomOrder(Object.keys(generatedAdvert.title));
+    var titles = window.utility.sortArrayInRandomOrder(generatedAdvert.TITLES);
 
     for (var i = 0; i < generatedAdvert.AMOUNT; i++) {
       adverts[i] = createAdvert(generatedAdvert.avatar.MIN_NUMBER + i, titles[i]);

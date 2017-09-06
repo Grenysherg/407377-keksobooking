@@ -184,13 +184,13 @@
 
 
   var onTimeInChange = function () {
-    window.synchronizeInputs(timeInInput, timeOutInput, window.data.advert.timeIn.VALUES,
-        window.data.advert.timeOut.VALUES, setInputValue);
+    window.synchronizeInputs(timeInInput, timeOutInput,
+        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
   };
 
   var onTimeOutChange = function () {
-    window.synchronizeInputs(timeInInput, timeOutInput, window.data.advert.timeIn.VALUES,
-        window.data.advert.timeOut.VALUES, setInputValue);
+    window.synchronizeInputs(timeInInput, timeOutInput,
+        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
   };
 
 
@@ -201,8 +201,8 @@
 
   setCapacityOptions();
 
-  window.synchronizeInputs(timeInInput, timeOutInput, window.data.advert.timeIn.VALUES,
-      window.data.advert.timeOut.VALUES, setInputValue);
+  window.synchronizeInputs(timeInInput, timeOutInput,
+      window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
 
   addFormEvents();
 })();

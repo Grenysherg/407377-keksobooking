@@ -2,7 +2,6 @@
 
 (function () {
   window.dragFreeElement = function (evt, domElement, dragArea, additionalAction) {
-
     evt.preventDefault();
 
     var mouseStartCoordinate = {};
