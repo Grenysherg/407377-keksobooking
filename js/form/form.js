@@ -49,6 +49,7 @@
 
     lodgeTypeInput.addEventListener('change', onLodgeTypeChange);
 
+    priceInput.addEventListener('input', onPriceInput);
     priceInput.addEventListener('invalid', onPriceInvalid);
 
     roomAmountInput.addEventListener('change', onRoomAmountChange);
@@ -70,21 +71,19 @@
 
     if (target.value.length < window.data.advert.title.MIN_LENGTH) {
       titleInput.setCustomValidity('Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH);
-      setInputErrorColor(titleInput);
     } else {
       titleInput.setCustomValidity('');
-      setInputValidColor(titleInput);
     }
   };
 
   var onTitleInvalid = function () {
     if (!titleInput.validity.valid) {
+      setInputErrorColor(titleInput);
+
       if (titleInput.validity.valueMissing) {
         titleInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-        setInputErrorColor(titleInput);
       } else if (titleInput.validity.tooLong) {
         titleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
-        setInputErrorColor(titleInput);
       }
     } else {
       titleInput.setCustomValidity('');
@@ -120,22 +119,29 @@
     window.synchronizeInputs(lodgeTypeInput, priceInput, lodgeTypes, minPrices, setInputMinNumber);
   };
 
+  var onPriceInput = function () {
+    if (priceInput.validity.valid) {
+      priceInput.setCustomValidity('');
+    }
+  };
+
   var onPriceInvalid = function () {
-    var currentMinPrice = Number(priceInput.getAttribute('min'));
-    var minPricesElementIndex = minPrices.indexOf(currentMinPrice);
+    if (!priceInput.validity.valid) {
+      var currentMinPrice = Number(priceInput.getAttribute('min'));
+      var minPricesElementIndex = minPrices.indexOf(currentMinPrice);
 
-    if (priceInput.validity.valueMissing) {
-      priceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
       setInputErrorColor(priceInput);
-    } else if (priceInput.validity.rangeUnderflow) {
-      var lodgeTypesElement = lodgeTypes[minPricesElementIndex];
-      var lodgeTypeValue = window.data.advert.lodgeType[lodgeTypesElement].VALUE;
 
-      priceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
-      setInputErrorColor(priceInput);
-    } else if (priceInput.validity.rangeOverflow) {
-      priceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
-      setInputErrorColor(priceInput);
+      if (priceInput.validity.valueMissing) {
+        priceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
+      } else if (priceInput.validity.rangeUnderflow) {
+        var lodgeTypesElement = lodgeTypes[minPricesElementIndex];
+        var lodgeTypeValue = window.data.advert.lodgeType[lodgeTypesElement].VALUE;
+
+        priceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
+      } else if (priceInput.validity.rangeOverflow) {
+        priceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
+      }
     } else {
       priceInput.setCustomValidity('');
       setInputValidColor(priceInput);
@@ -198,13 +204,14 @@
 
   /* Отправка формы */
 
+
   var onFormSubmit = function (evt) {
     window.backend.save(
         domForm.getAttribute('action'),
         new FormData(domForm),
         function () {
           domForm.reset();
-          
+
           window.utility.showSystemMessage('Данные формы отправлены успешно', 'success');
         },
         function () {

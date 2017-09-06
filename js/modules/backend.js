@@ -7,7 +7,9 @@
 
   var setup = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
+
     xhr.responseType = 'json';
+    xhr.timeout = 1000;
 
     var onXhrLoad = function () {
       if (xhr.status === status['ok']) {

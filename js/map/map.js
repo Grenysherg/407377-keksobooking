@@ -117,5 +117,17 @@
   domMainPin.addEventListener('mousedown', window.mapPin.onMainClick);
 
   var adverts = window.mapAdvert.createArray();
-  window.backend.load(url, onSuccess, onError);
+  window.backend.load(
+      'https://1510.dump.academy/keksobooking/data',
+      function (loadAdverts) {
+        adverts = adverts.concat(loadAdverts);
+
+        window.mapPin.renderCollection(adverts);
+
+        domCard.classList.remove('hidden');
+        openCard(domPinMap.children[1]);
+      },
+      function () {
+        window.utility.showSystemMessage('Произошла ошибка при загрузке данных', 'error');
+      });
 })();
