@@ -93,23 +93,6 @@
   };
 
 
-  /* Загрузка данных с сервера */
-
-
-  var url = 'https://1510.dump.academy/keksobooking/data';
-
-  var onSuccess = function (loadAdverts) {
-    adverts = adverts.concat(loadAdverts);
-    window.mapPin.renderCollection(adverts);
-
-    openCard(domPinMap.children[1]);
-  };
-
-  var onError = function (errorMessage) {
-    window.utility.showSystemMessage(errorMessage, 'error');
-  };
-
-
   /* main */
 
 
@@ -117,6 +100,7 @@
   domMainPin.addEventListener('mousedown', window.mapPin.onMainClick);
 
   var adverts = window.mapAdvert.createArray();
+
   window.backend.load(
       'https://1510.dump.academy/keksobooking/data',
       function (loadAdverts) {
