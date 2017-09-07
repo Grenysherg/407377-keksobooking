@@ -7,6 +7,11 @@
   <title>Keksobooking</title>
 </head>
 <body>
+  <div class="system-message hidden">
+    <p class="system-message__text"></p>
+    <button class="system-message__close" type="button">Закрыть</button>
+  </div>
+  
 <header class="header">
   <h1 class="header__logo">KEKSOBOOKING</h1>
   <h2 class="header__motto">Кексы по соседству</h2>
@@ -70,7 +75,7 @@
     <div class="tokyo__pin-map">
       <div class="pin  pin__main" draggable="true"><img src="img/main-pin-image.png" alt="Main Pin" class="rounded" width="40" height="44"></div>
     </div>
-    <div id="offer-dialog" class="dialog">
+    <div id="offer-dialog" class="dialog hidden">
       <div class="dialog__title"><img src="img/avatars/user01.png" alt="Avatar" width="70" height="70">
         <a href="#" class="dialog__close"><img src="img/close.svg" alt="close" width="22" height="22"></a>
       </div>
@@ -129,8 +134,8 @@
             <div class="form__element">
               <label for="type">Тип жилья</label>
               <select id="type" name="type">
+                <option value="bungalo">Бунгало</option>
                 <option value="flat" selected>Квартира</option>
-                <option value="bungalo">Лачуга</option>
                 <option value="house">Дом</option>
                 <option value="palace">Дворец</option>
               </select>
@@ -277,21 +282,27 @@
     <h4 class="lodge__type"></h4>
     <p class="lodge__rooms-and-guests"></p>
     <p class="lodge__checkin-time"></p>
-    <div class="lodge__features">
-    </div>
+    <div class="lodge__features"></div>
     <p class="lodge__description"></p>
-    <div class="lodge__photos">
-    </div>
+    <div class="lodge__photos"></div>
   </div>
 </template>
   
-  <script src="js/util.js"></script>
+  <script src="js/data.js"></script>
   
-  <script src="./js/advert.js"></script>
-  <script src="./js/pin.js"></script>
-  <script src="./js/card.js"></script>
-  <script src="./js/map.js"></script>
+  <script src="js/modules/key.js"></script>
+  <script src="js/modules/utility.js"></script>
+  <script src="js/modules/backend.js"></script>
   
-  <script src="./js/form.js"></script>
+  <script src="js/modules/drag-free-element.js"></script>
+  <script src="js/modules/synchronize-inputs.js"></script>
+  
+  <script src="js/map/data.js"></script>
+  <script src="js/map/advert.js"></script>
+  <script src="js/map/pin.js"></script>
+  <script src="js/map/card.js"></script>
+  <script src="js/map/map.js"></script>
+  
+  <script src="js/form/form.js"></script>
 </body>
 </html>
