@@ -31,7 +31,7 @@
   };
 
   var setInputValidColor = function (input) {
-    input.style.borderColor = 'green';
+    input.style.borderColor = '#d9d9d3';
   };
 
   var renderSelectOption = function (value, text) {
@@ -119,32 +119,32 @@
     window.synchronizeInputs(lodgeTypeInput, priceInput, lodgeTypes, minPrices, setInputMinNumber);
   };
 
-  var onPriceInput = function () {
-    if (priceInput.validity.valid) {
+  var onPriceInput = function (evt) {
+    var target = evt.target;
+
+    var currentMinPrice = Number(priceInput.getAttribute('min'));
+    var lodgeTypeValue = window.data.advert.lodgeType[lodgeTypes[minPrices.indexOf(currentMinPrice)]].VALUE;
+
+    if (Number(target.value) < currentMinPrice) {
+      priceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
+    } else if (Number(target.value) > window.data.advert.price.MAX) {
+      priceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
+    } else {
+      setInputValidColor(priceInput);
       priceInput.setCustomValidity('');
     }
   };
 
   var onPriceInvalid = function () {
     if (!priceInput.validity.valid) {
-      var currentMinPrice = Number(priceInput.getAttribute('min'));
-      var minPricesElementIndex = minPrices.indexOf(currentMinPrice);
-
       setInputErrorColor(priceInput);
 
       if (priceInput.validity.valueMissing) {
         priceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      } else if (priceInput.validity.rangeUnderflow) {
-        var lodgeTypesElement = lodgeTypes[minPricesElementIndex];
-        var lodgeTypeValue = window.data.advert.lodgeType[lodgeTypesElement].VALUE;
-
-        priceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
-      } else if (priceInput.validity.rangeOverflow) {
-        priceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
       }
     } else {
-      priceInput.setCustomValidity('');
       setInputValidColor(priceInput);
+      priceInput.setCustomValidity('');
     }
   };
 
