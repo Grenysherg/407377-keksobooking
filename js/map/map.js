@@ -108,8 +108,8 @@
 
         window.mapPin.renderCollection(adverts);
 
-        domCard.classList.remove('hidden');
         openCard(domPinMap.children[1]);
+        domCard.classList.remove('hidden');
       },
       function () {
         window.utility.showSystemMessage('Произошла ошибка при загрузке данных', 'error');
