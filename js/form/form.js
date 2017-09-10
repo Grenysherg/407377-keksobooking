@@ -214,7 +214,7 @@
 
   var onDomFormSubmit = function (evt) {
     window.backend.save(
-        domForm.getAttribute('action'),
+        'https://1510.dump.academy/keksobooking',
         new FormData(domForm),
         function () {
           domForm.reset();
