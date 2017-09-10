@@ -2,21 +2,22 @@
 
 (function () {
   var domForm = document.querySelector('.notice__form');
-  var titleInput = domForm.querySelector('#title');
-  var lodgeTypeInput = domForm.querySelector('#type');
-  var priceInput = domForm.querySelector('#price');
-  var roomAmountInput = domForm.querySelector('#room_number');
-  var capacityInput = domForm.querySelector('#capacity');
-  var addressInput = domForm.querySelector('#address');
-  var timeInInput = domForm.querySelector('#timein');
-  var timeOutInput = domForm.querySelector('#timeout');
+  var domTitleInput = domForm.querySelector('#title');
+  var domTypeSelect = domForm.querySelector('#type');
+  var domPriceInput = domForm.querySelector('#price');
+  var domRoomSelect = domForm.querySelector('#room_number');
+  var domCapacitySelect = domForm.querySelector('#capacity');
+  var domAddressInput = domForm.querySelector('#address');
+  var domTimeInSelect = domForm.querySelector('#timein');
+  var domTimeOutSelect = domForm.querySelector('#timeout');
 
   var validationMessage = {};
   validationMessage.EMPTY_FIELD = 'Обязательное поле';
 
 
-  /* utilities */
-
+  var createLocationString = function (coordinateXValue, coordinateYValue) {
+    return 'x: ' + coordinateXValue + ', y: ' + coordinateYValue;
+  };
 
   var setInputValue = function (input, value) {
     input.value = value;
@@ -26,11 +27,11 @@
     input.min = number;
   };
 
-  var setInputErrorColor = function (input) {
+  var setDomFieldErrorColor = function (input) {
     input.style.borderColor = 'red';
   };
 
-  var setInputValidColor = function (input) {
+  var setDomFieldValidColor = function (input) {
     input.style.borderColor = '#d9d9d3';
   };
 
@@ -44,50 +45,50 @@
   };
 
   var addFormEvents = function () {
-    titleInput.addEventListener('input', onTitleInput);
-    titleInput.addEventListener('invalid', onTitleInvalid);
+    domTitleInput.addEventListener('input', onDomTitleInput);
+    domTitleInput.addEventListener('invalid', onDomTitleInvalid);
 
-    lodgeTypeInput.addEventListener('change', onLodgeTypeChange);
+    domTypeSelect.addEventListener('change', onDomTypeChange);
 
-    priceInput.addEventListener('input', onPriceInput);
-    priceInput.addEventListener('invalid', onPriceInvalid);
+    domPriceInput.addEventListener('input', onDomPriceInput);
+    domPriceInput.addEventListener('invalid', onDomPriceInvalid);
 
-    roomAmountInput.addEventListener('change', onRoomAmountChange);
+    domRoomSelect.addEventListener('change', onDomRoomChange);
 
-    addressInput.addEventListener('invalid', onAddressInvalid);
+    domAddressInput.addEventListener('invalid', onDomAddressInvalid);
 
-    timeInInput.addEventListener('change', onTimeInChange);
-    timeOutInput.addEventListener('change', onTimeOutChange);
+    domTimeInSelect.addEventListener('change', onDomTimeInChange);
+    domTimeOutSelect.addEventListener('change', onDomTimeOutChange);
 
-    domForm.addEventListener('submit', onFormSubmit);
+    domForm.addEventListener('submit', onDomFormSubmit);
   };
 
 
   /* Название */
 
 
-  var onTitleInput = function (evt) {
+  var onDomTitleInput = function (evt) {
     var target = evt.target;
 
     if (target.value.length < window.data.advert.title.MIN_LENGTH) {
-      titleInput.setCustomValidity('Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH);
+      domTitleInput.setCustomValidity('Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH);
     } else {
-      titleInput.setCustomValidity('');
+      domTitleInput.setCustomValidity('');
     }
   };
 
-  var onTitleInvalid = function () {
-    if (!titleInput.validity.valid) {
-      setInputErrorColor(titleInput);
+  var onDomTitleInvalid = function () {
+    if (!domTitleInput.validity.valid) {
+      setDomFieldErrorColor(domTitleInput);
 
-      if (titleInput.validity.valueMissing) {
-        titleInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      } else if (titleInput.validity.tooLong) {
-        titleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
+      if (domTitleInput.validity.valueMissing) {
+        domTitleInput.setCustomValidity(validationMessage.EMPTY_FIELD);
+      } else if (domTitleInput.validity.tooLong) {
+        domTitleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
       }
     } else {
-      titleInput.setCustomValidity('');
-      setInputValidColor(titleInput);
+      domTitleInput.setCustomValidity('');
+      setDomFieldValidColor(domTitleInput);
     }
   };
 
@@ -95,56 +96,56 @@
   /* Тип жилья и цена */
 
 
-  var getLodgeTypes = function () {
-    return Object.keys(window.data.advert.lodgeType);
+  var getTypes = function () {
+    return Object.keys(window.data.advert.type);
   };
 
   var getMinPrices = function () {
     var array = [];
-    var lodgeType = window.data.advert.lodgeType;
+    var type = window.data.advert.type;
 
-    for (var key in lodgeType) {
-      if (lodgeType.hasOwnProperty(key)) {
-        array.push(lodgeType[key].MIN_PRICE);
+    for (var key in type) {
+      if (type.hasOwnProperty(key)) {
+        array.push(type[key].MIN_PRICE);
       }
     }
 
     return array;
   };
 
-  var lodgeTypes = getLodgeTypes();
+  var lodgeTypes = getTypes();
   var minPrices = getMinPrices();
 
-  var onLodgeTypeChange = function () {
-    window.synchronizeInputs(lodgeTypeInput, priceInput, lodgeTypes, minPrices, setInputMinNumber);
+  var onDomTypeChange = function () {
+    window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setInputMinNumber);
   };
 
-  var onPriceInput = function (evt) {
+  var onDomPriceInput = function (evt) {
     var target = evt.target;
 
-    var currentMinPrice = Number(priceInput.getAttribute('min'));
-    var lodgeTypeValue = window.data.advert.lodgeType[lodgeTypes[minPrices.indexOf(currentMinPrice)]].VALUE;
+    var currentMinPrice = Number(domPriceInput.getAttribute('min'));
+    var lodgeTypeValue = window.data.advert.type[lodgeTypes[minPrices.indexOf(currentMinPrice)]].VALUE;
 
     if (Number(target.value) < currentMinPrice) {
-      priceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
+      domPriceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
     } else if (Number(target.value) > window.data.advert.price.MAX) {
-      priceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
+      domPriceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
     } else {
-      setInputValidColor(priceInput);
-      priceInput.setCustomValidity('');
+      setDomFieldValidColor(domPriceInput);
+      domPriceInput.setCustomValidity('');
     }
   };
 
-  var onPriceInvalid = function () {
-    if (!priceInput.validity.valid) {
-      setInputErrorColor(priceInput);
+  var onDomPriceInvalid = function () {
+    if (!domPriceInput.validity.valid) {
+      setDomFieldErrorColor(domPriceInput);
 
-      if (priceInput.validity.valueMissing) {
-        priceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
+      if (domPriceInput.validity.valueMissing) {
+        domPriceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
       }
     } else {
-      setInputValidColor(priceInput);
-      priceInput.setCustomValidity('');
+      setDomFieldValidColor(domPriceInput);
+      domPriceInput.setCustomValidity('');
     }
   };
 
@@ -156,20 +157,20 @@
     var rooms = Object.keys(window.data.advert.room);
     var fragment = document.createDocumentFragment();
 
-    capacityInput.options.length = 0;
+    domCapacitySelect.options.length = 0;
 
-    if (roomAmountInput.value === rooms[rooms.length - 1]) {
+    if (domRoomSelect.value === rooms[rooms.length - 1]) {
       fragment.appendChild(renderSelectOption('0', window.data.advert.capacity.VALUES[0]));
     } else {
-      for (var i = rooms.indexOf(roomAmountInput.value); i >= 0; i--) {
+      for (var i = rooms.indexOf(domRoomSelect.value); i >= 0; i--) {
         fragment.appendChild(renderSelectOption(String(i + 1), window.data.advert.capacity.VALUES[i + 1]));
       }
     }
 
-    capacityInput.appendChild(fragment);
+    domCapacitySelect.appendChild(fragment);
   };
 
-  var onRoomAmountChange = function () {
+  var onDomRoomChange = function () {
     setCapacityOptions();
   };
 
@@ -177,27 +178,33 @@
   /* Адрес */
 
 
-  var onAddressInvalid = function () {
-    if (addressInput.validity.valueMissing) {
-      addressInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      setInputErrorColor(addressInput);
+  var onDomAddressInvalid = function () {
+    if (domAddressInput.validity.valueMissing) {
+      domAddressInput.setCustomValidity(validationMessage.EMPTY_FIELD);
+      setDomFieldErrorColor(domAddressInput);
     } else {
-      addressInput.setCustomValidity('');
-      setInputValidColor(addressInput);
+      domAddressInput.setCustomValidity('');
+      setDomFieldValidColor(domAddressInput);
     }
+  };
+
+  var setAddressDefaultValue = function () {
+    var mainPinPointerDefaultLocation = window.mapPin.getMainPointerDefaultLocation();
+
+    domAddressInput.setAttribute('value', createLocationString(mainPinPointerDefaultLocation.X, mainPinPointerDefaultLocation.Y));
   };
 
 
   /* Время заезда и выезда */
 
 
-  var onTimeInChange = function () {
-    window.synchronizeInputs(timeInInput, timeOutInput,
+  var onDomTimeInChange = function () {
+    window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
         window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
   };
 
-  var onTimeOutChange = function () {
-    window.synchronizeInputs(timeInInput, timeOutInput,
+  var onDomTimeOutChange = function () {
+    window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
         window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
   };
 
@@ -205,12 +212,13 @@
   /* Отправка формы */
 
 
-  var onFormSubmit = function (evt) {
+  var onDomFormSubmit = function (evt) {
     window.backend.save(
         domForm.getAttribute('action'),
         new FormData(domForm),
         function () {
           domForm.reset();
+          window.mapPin.resetMainPointerLocation();
 
           window.utility.showSystemMessage('Данные формы отправлены успешно', 'success');
         },
@@ -225,13 +233,22 @@
   /* main */
 
 
-  window.synchronizeInputs(lodgeTypeInput, priceInput, lodgeTypes, minPrices, setInputMinNumber);
+  window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setInputMinNumber);
 
   setCapacityOptions();
 
-  window.synchronizeInputs(timeInInput, timeOutInput,
+  window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
       window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
 
+  setAddressDefaultValue();
+
   addFormEvents();
+
+
+  window.form = {};
+
+  window.form.setAddressValue = function (mainPinPointerLocationX, mainPinPointerLocationY) {
+    domAddressInput.value = createLocationString(mainPinPointerLocationX, mainPinPointerLocationY);
+  };
 })();
 

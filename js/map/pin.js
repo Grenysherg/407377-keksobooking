@@ -3,7 +3,8 @@
 (function () {
   var domPinMap = document.querySelector('.tokyo__pin-map');
   var domMainPin = domPinMap.querySelector('.pin__main');
-  var pinTemplate = document.querySelector('#pin-template').content;
+  var domOrdinaryPinContainer = domPinMap.querySelector('.pin__container');
+  var domOrdinaryPinTemplate = document.querySelector('#pin-template').content;
 
   var pin = {};
 
@@ -16,93 +17,97 @@
   pin.main.WIDTH = domMainPin.clientWidth;
   pin.main.HEIGHT = domMainPin.clientHeight;
 
+  pin.main.pointerDefaultLocation = {};
+  pin.main.pointerDefaultLocation.X = parseInt(getComputedStyle(domMainPin).left, 10)
+    + window.utility.getHalfInteger(pin.main.WIDTH);
+  pin.main.pointerDefaultLocation.Y = parseInt(getComputedStyle(domMainPin).top, 10) + pin.main.HEIGHT;
+
   var mainPinDragArea = {};
-  mainPinDragArea.minX = window.mapData.address.x.MIN - window.utility.getHalfInteger(pin.main.WIDTH);
-  mainPinDragArea.maxX = window.mapData.address.x.MAX - window.utility.getHalfInteger(pin.main.WIDTH);
-  mainPinDragArea.minY = window.mapData.address.y.MIN - pin.main.HEIGHT;
-  mainPinDragArea.maxY = window.mapData.address.y.MAX - pin.main.HEIGHT;
-
-  var mainPinPointerLocation = {};
-  mainPinPointerLocation.x = parseInt(getComputedStyle(domMainPin).left, 10)
-      + window.utility.getHalfInteger(pin.main.WIDTH);
-  mainPinPointerLocation.y = parseInt(getComputedStyle(domMainPin).top, 10) + pin.main.HEIGHT;
+  mainPinDragArea.minX = window.data.advert.address.x.MIN - window.utility.getHalfInteger(pin.main.WIDTH);
+  mainPinDragArea.maxX = window.data.advert.address.x.MAX - window.utility.getHalfInteger(pin.main.WIDTH);
+  mainPinDragArea.minY = window.data.advert.address.y.MIN - pin.main.HEIGHT;
+  mainPinDragArea.maxY = window.data.advert.address.y.MAX - pin.main.HEIGHT;
 
 
-  /* utilities */
+  var renderOrdinaryPin = function (advert, advertsElementIndex) {
+    var domOrdinaryPin = domOrdinaryPinTemplate.cloneNode(true).querySelector('.pin');
+
+    var ordinaryPinLocation = setOrdinaryPinLocation(advert.location);
 
 
-  var renderPin = function (advert, advertsElementIndex) {
-    var domPin = pinTemplate.cloneNode(true);
-    var domPinContainer = domPin.querySelector('.pin');
+    domOrdinaryPin.style.top = ordinaryPinLocation.y + 'px';
+    domOrdinaryPin.style.left = ordinaryPinLocation.x + 'px';
+    domOrdinaryPin.setAttribute(pin.ordinary.DATASET_NAME, advertsElementIndex);
+    domOrdinaryPin.querySelector('.rounded').setAttribute('src', advert.author.avatar);
 
-    var pinLocation = getOrdinaryPinLocation(advert.location);
 
-    domPinContainer.style.top = pinLocation.y + 'px';
-    domPinContainer.style.left = pinLocation.x + 'px';
-    domPinContainer.setAttribute(pin.ordinary.DATASET_NAME, advertsElementIndex);
-
-    domPin.querySelector('.rounded').setAttribute('src', advert.author.avatar);
-
-    return domPin;
+    return domOrdinaryPin;
   };
 
-  var getOrdinaryPinLocation = function (advertLocation) {
-    var pinLocation = {};
-    pinLocation.x = advertLocation.x - window.utility.getHalfInteger(pin.ordinary.WIDTH);
-    pinLocation.y = advertLocation.y - pin.ordinary.HEIGHT;
+  var setOrdinaryPinLocation = function (advertLocation) {
+    var ordinaryPinLocation = {};
+    ordinaryPinLocation.x = advertLocation.x - window.utility.getHalfInteger(pin.ordinary.WIDTH);
+    ordinaryPinLocation.y = advertLocation.y - pin.ordinary.HEIGHT;
 
-    return pinLocation;
+
+    return ordinaryPinLocation;
   };
 
-  var setAddressInputValue = function () {
-    var addressInput = document.querySelector('#address');
-
-    addressInput.value = window.utility.getLocationString(mainPinPointerLocation.x, mainPinPointerLocation.y);
+  var addOrdinaryVisibilityState = function (domOrdinaryPin) {
+    domOrdinaryPin.classList.remove('hidden');
   };
 
-  var setCurrentLocation = function () {
-    mainPinPointerLocation.x = parseInt(domMainPin.style.left, 10) + window.utility.getHalfInteger(pin.main.WIDTH);
-    mainPinPointerLocation.y = parseInt(domMainPin.style.top, 10) + pin.main.HEIGHT;
+  var removeOrdinaryVisibilityState = function (domOrdinaryPin) {
+    domOrdinaryPin.classList.add('hidden');
+  };
 
-    setAddressInputValue();
+  var onMainPinPointerLocationChange = function () {
+    window.form.setAddressValue(
+        parseInt(domMainPin.style.left, 10) + window.utility.getHalfInteger(pin.main.WIDTH),
+        parseInt(domMainPin.style.top, 10) + pin.main.HEIGHT
+    );
   };
 
 
-  /* main */
-
-
-  setAddressInputValue();
-
-
-  /* external functions */
+  domMainPin.addEventListener('mousedown', function (evt) {
+    window.dragFreeElement(evt, domMainPin, mainPinDragArea, onMainPinPointerLocationChange);
+  });
 
 
   window.mapPin = {};
 
-  window.mapPin.getDatasetName = function () {
-    return pin.ordinary.DATASET_NAME;
+  window.mapPin.getMainPointerDefaultLocation = function () {
+    return pin.main.pointerDefaultLocation;
   };
 
-  window.mapPin.renderCollection = function (adverts) {
+  window.mapPin.resetMainPointerLocation = function () {
+    domMainPin.style.top = '';
+    domMainPin.style.left = '';
+  };
+
+  window.mapPin.renderOrdinaryCollection = function (adverts) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < adverts.length; i++) {
-      fragment.appendChild(renderPin(adverts[i], i));
-    }
 
-    domPinMap.appendChild(fragment);
+    adverts.forEach(function (it, index) {
+      fragment.appendChild(renderOrdinaryPin(it, index));
+    });
+
+    domOrdinaryPinContainer.appendChild(fragment);
   };
 
-  window.mapPin.doActionIfDomElementIs = function (domElement, action) {
-    var domElementDataset = null;
+  window.mapPin.doActionIfChosen = function (domElement, cb) {
+    var elementDataset = null;
     var domActivePin = domPinMap.querySelector('.pin--active');
-    var domActivePinDataset = domActivePin ? domActivePin.getAttribute(pin.ordinary.DATASET_NAME) : null;
+    var activePinDataset = domActivePin ? domActivePin.getAttribute(pin.ordinary.DATASET_NAME) : null;
+
 
     while (domElement !== domPinMap) {
-      domElementDataset = domElement.getAttribute(pin.ordinary.DATASET_NAME);
+      elementDataset = domElement.getAttribute(pin.ordinary.DATASET_NAME);
 
-      if (domElementDataset && domElementDataset !== domActivePinDataset) {
-        action(domElement);
+      if (elementDataset && elementDataset !== activePinDataset) {
+        cb(domElement, elementDataset);
+
 
         return;
       }
@@ -111,17 +116,23 @@
     }
   };
 
-  window.mapPin.addActiveState = function (domPin) {
-    domPin.classList.add('pin--active');
-    domPin.style.cursor = 'default';
+  window.mapPin.addOrdinaryActiveState = function (domOrdinaryPin) {
+    domOrdinaryPin.classList.add('pin--active');
+    domOrdinaryPin.style.cursor = 'default';
   };
 
-  window.mapPin.removeActiveState = function (domPin) {
-    domPin.classList.remove('pin--active');
-    domPin.style.cursor = 'pointer';
+  window.mapPin.removeOrdinaryActiveState = function (domOrdinaryPin) {
+    domOrdinaryPin.classList.remove('pin--active');
+    domOrdinaryPin.style.cursor = 'pointer';
   };
 
-  window.mapPin.onMainClick = function (evt) {
-    window.dragFreeElement(evt, domMainPin, mainPinDragArea, setCurrentLocation);
+  window.mapPin.showAndHideOrdinaryPins = function (advertList) {
+    Array.from(domOrdinaryPinContainer.children).forEach(function (it, index) {
+      if (advertList[String(index)]) {
+        addOrdinaryVisibilityState(it);
+      } else {
+        removeOrdinaryVisibilityState(it);
+      }
+    });
   };
 })();

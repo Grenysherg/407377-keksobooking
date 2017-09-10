@@ -2,83 +2,58 @@
 
 (function () {
   var domPinMap = document.querySelector('.tokyo__pin-map');
-  var domMainPin = domPinMap.querySelector('.pin__main');
 
   var domCard = document.querySelector('#offer-dialog');
   var domCardClose = domCard.querySelector('.dialog__close');
 
+  var domActiveOrdinaryPin = null;
 
-  /* utilities */
-
-
-  var addPinMapEvents = function () {
-    domPinMap.addEventListener('click', onPinMapClick);
-    domPinMap.addEventListener('keydown', onPinMapEnterPress);
-  };
-
-  var addCardCloseEvents = function () {
-    domCardClose.addEventListener('click', onCardCloseClick);
-    domCardClose.addEventListener('keydown', onCardCloseEnterPress);
-  };
-
-  var removeCardCloseEvents = function () {
-    domCardClose.removeEventListener('click', onCardCloseClick);
-    domCardClose.removeEventListener('keydown', onCardCloseEnterPress);
-  };
+  var advertList = {};
 
 
-  /* Открытие/закрытие окна карточки */
-
-
-  var openCard = function (domPin) {
-    var domActivePin = domPinMap.querySelector('.pin--active');
-
-    if (domActivePin) {
-      window.mapPin.removeActiveState(domActivePin);
+  var openCard = function (domOrdinaryPin, advertListKey) {
+    if (domActiveOrdinaryPin) {
+      window.mapPin.removeOrdinaryActiveState(domActiveOrdinaryPin);
     } else {
-      domCard.classList.remove('hidden');
+      window.mapCard.addVisibilityState();
 
       addCardCloseEvents();
       document.addEventListener('keydown', onDocumentEscPress);
     }
 
-    var advertsElementIndex = domPin.getAttribute(window.mapPin.getDatasetName());
+    window.mapPin.addOrdinaryActiveState(domOrdinaryPin);
+    domActiveOrdinaryPin = domOrdinaryPin;
 
-    window.mapPin.addActiveState(domPin);
-    window.mapCard.renderElement(adverts[advertsElementIndex]);
+    window.mapCard.render(advertList[advertListKey]);
   };
 
   var closeCard = function () {
-    var domActivePin = domPinMap.querySelector('.pin--active');
-    window.mapPin.removeActiveState(domActivePin);
+    window.mapPin.removeOrdinaryActiveState(domActiveOrdinaryPin);
+    domActiveOrdinaryPin = null;
 
-    domCard.classList.add('hidden');
+    window.mapCard.removeVisibilityState();
 
     removeCardCloseEvents();
     document.removeEventListener('keydown', onDocumentEscPress);
   };
 
-
-  /* Обработчики событий */
-
-
-  var onPinMapClick = function (evt) {
-    window.mapPin.doActionIfDomElementIs(evt.target, openCard);
+  var onDomPinMapClick = function (evt) {
+    window.mapPin.doActionIfChosen(evt.target, openCard);
   };
 
-  var onPinMapEnterPress = function (evt) {
+  var onDomPinMapEnterPress = function (evt) {
     if (window.key.isEnterPressed(evt)) {
-      window.mapPin.doActionIfDomElementIs(evt.target, openCard);
+      window.mapPin.doActionIfChosen(evt.target, openCard);
     }
   };
 
-  var onCardCloseClick = function (evt) {
+  var onDomCardCloseClick = function (evt) {
     evt.preventDefault();
 
     closeCard();
   };
 
-  var onCardCloseEnterPress = function (evt) {
+  var onDomCardCloseEnterPress = function (evt) {
     evt.preventDefault();
 
     if (window.key.isEnterPressed(evt)) {
@@ -92,26 +67,36 @@
     }
   };
 
+  var addPinMapEvents = function () {
+    domPinMap.addEventListener('click', onDomPinMapClick);
+    domPinMap.addEventListener('keydown', onDomPinMapEnterPress);
+  };
 
-  /* main */
+  var addCardCloseEvents = function () {
+    domCardClose.addEventListener('click', onDomCardCloseClick);
+    domCardClose.addEventListener('keydown', onDomCardCloseEnterPress);
+  };
+
+  var removeCardCloseEvents = function () {
+    domCardClose.removeEventListener('click', onDomCardCloseClick);
+    domCardClose.removeEventListener('keydown', onDomCardCloseEnterPress);
+  };
 
 
   addPinMapEvents();
-  domMainPin.addEventListener('mousedown', window.mapPin.onMainClick);
 
-  var adverts = window.mapAdvert.createArray();
 
-  window.backend.load(
-      'https://1510.dump.academy/keksobooking/data',
-      function (loadAdverts) {
-        adverts = adverts.concat(loadAdverts);
+  window.map = {};
 
-        window.mapPin.renderCollection(adverts);
+  window.map.update = function (newAdvertList) {
+    advertList = newAdvertList;
 
-        openCard(domPinMap.children[1]);
-        domCard.classList.remove('hidden');
-      },
-      function () {
-        window.utility.showSystemMessage('Произошла ошибка при загрузке данных', 'error');
-      });
+    window.mapPin.showAndHideOrdinaryPins(advertList);
+
+    if (domActiveOrdinaryPin) {
+      if (domActiveOrdinaryPin.classList.contains('hidden')) {
+        closeCard();
+      }
+    }
+  };
 })();
