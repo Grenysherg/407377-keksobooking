@@ -74,18 +74,18 @@
   });
 
 
-  window.mapPin = {};
+  window.pin = {};
 
-  window.mapPin.getMainPointerDefaultLocation = function () {
+  window.pin.getMainPointerDefaultLocation = function () {
     return pin.main.pointerDefaultLocation;
   };
 
-  window.mapPin.resetMainPointerLocation = function () {
+  window.pin.resetMainPointerLocation = function () {
     domMainPin.style.top = '';
     domMainPin.style.left = '';
   };
 
-  window.mapPin.renderOrdinaryCollection = function (adverts) {
+  window.pin.renderOrdinaryCollection = function (adverts) {
     var fragment = document.createDocumentFragment();
 
 
@@ -96,7 +96,7 @@
     domOrdinaryPinContainer.appendChild(fragment);
   };
 
-  window.mapPin.doActionIfChosen = function (domElement, cb) {
+  window.pin.doActionIfChosen = function (domElement, cb) {
     var elementDataset = null;
     var domActivePin = domPinMap.querySelector('.pin--active');
     var activePinDataset = domActivePin ? domActivePin.getAttribute(pin.ordinary.DATASET_NAME) : null;
@@ -116,17 +116,17 @@
     }
   };
 
-  window.mapPin.addOrdinaryActiveState = function (domOrdinaryPin) {
+  window.pin.addOrdinaryActiveState = function (domOrdinaryPin) {
     domOrdinaryPin.classList.add('pin--active');
     domOrdinaryPin.style.cursor = 'default';
   };
 
-  window.mapPin.removeOrdinaryActiveState = function (domOrdinaryPin) {
+  window.pin.removeOrdinaryActiveState = function (domOrdinaryPin) {
     domOrdinaryPin.classList.remove('pin--active');
     domOrdinaryPin.style.cursor = 'pointer';
   };
 
-  window.mapPin.showAndHideOrdinaryPins = function (advertList) {
+  window.pin.showAndHideOrdinaryPins = function (advertList) {
     Array.from(domOrdinaryPinContainer.children).forEach(function (it, index) {
       if (advertList[String(index)]) {
         addOrdinaryVisibilityState(it);

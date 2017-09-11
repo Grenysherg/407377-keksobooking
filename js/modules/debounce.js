@@ -3,14 +3,14 @@
 (function () {
   var DEBOUNCE_INTERVAL = 500;
 
-  var currentTimeoutNumber = null;
+  var currentTimeoutId = null;
 
 
   window.debounce = function (cb) {
-    if (currentTimeoutNumber) {
-      window.clearTimeout(currentTimeoutNumber);
+    if (currentTimeoutId) {
+      window.clearTimeout(currentTimeoutId);
     }
 
-    currentTimeoutNumber = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+    currentTimeoutId = window.setTimeout(cb, DEBOUNCE_INTERVAL);
   };
 })();

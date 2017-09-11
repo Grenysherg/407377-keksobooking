@@ -50,9 +50,9 @@
   };
 
 
-  window.mapCard = {};
+  window.card = {};
 
-  window.mapCard.render = function (advert) {
+  window.card.render = function (advert) {
     var domCardPanel = domCard.querySelector('.dialog__panel');
     var domCardNewPanel = domCardTemplate.cloneNode(true);
 
@@ -62,7 +62,7 @@
     domCardNewPanel.querySelector('.lodge__title').textContent = advert.offer.title;
     domCardNewPanel.querySelector('.lodge__address').textContent = advert.offer.address;
     domCardNewPanel.querySelector('.lodge__price').textContent = advert.offer.price + window.data.sign.RUBLE + '/ночь';
-    domCardNewPanel.querySelector('.lodge__type').textContent = window.data.advert.type[advert.offer.type].VALUE;
+    domCardNewPanel.querySelector('.lodge__type').textContent = window.data.advert.type[advert.offer.type].RUS_VALUE;
     domCardNewPanel.querySelector('.lodge__rooms-and-guests').textContent
       = takeGuestAndRoomString(advert.offer.guests, advert.offer.rooms);
     domCardNewPanel.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin
@@ -74,11 +74,11 @@
     domCard.replaceChild(domCardNewPanel, domCardPanel);
   };
 
-  window.mapCard.addVisibilityState = function () {
+  window.card.addVisibilityState = function () {
     domCard.classList.remove('hidden');
   };
 
-  window.mapCard.removeVisibilityState = function () {
+  window.card.removeVisibilityState = function () {
     domCard.classList.add('hidden');
   };
 })();

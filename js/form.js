@@ -11,37 +11,49 @@
   var domTimeInSelect = domForm.querySelector('#timein');
   var domTimeOutSelect = domForm.querySelector('#timeout');
 
-  var validationMessage = {};
-  validationMessage.EMPTY_FIELD = 'Обязательное поле';
-
 
   var createLocationString = function (coordinateXValue, coordinateYValue) {
     return 'x: ' + coordinateXValue + ', y: ' + coordinateYValue;
   };
 
-  var setInputValue = function (input, value) {
-    input.value = value;
+  var setDomFieldValue = function (domField, value) {
+    domField.value = value;
   };
 
-  var setInputMinNumber = function (input, number) {
-    input.min = number;
+  var setDomFieldMinNumber = function (domField, number) {
+    domField.min = number;
   };
 
-  var setDomFieldErrorColor = function (input) {
-    input.style.borderColor = 'red';
+  var setDomFieldErrorColor = function (domField) {
+    domField.style.borderColor = 'red';
   };
 
-  var setDomFieldValidColor = function (input) {
-    input.style.borderColor = '#d9d9d3';
+  var setDomFieldValidColor = function (domField) {
+    domField.style.borderColor = '#d9d9d3';
   };
 
   var renderSelectOption = function (value, text) {
     var domElement = document.createElement('option');
 
+
     domElement.setAttribute('value', value);
     domElement.text = text;
 
+
     return domElement;
+  };
+
+  var onDomFieldInvalid = function (domField) {
+    if (!domField.validity.valid) {
+      setDomFieldErrorColor(domField);
+
+      if (domField.validity.valueMissing) {
+        domField.setCustomValidity('Обязательное поле');
+      }
+    } else {
+      setDomFieldValidColor(domField);
+      domField.setCustomValidity('');
+    }
   };
 
   var addFormEvents = function () {
@@ -54,8 +66,6 @@
     domPriceInput.addEventListener('invalid', onDomPriceInvalid);
 
     domRoomSelect.addEventListener('change', onDomRoomChange);
-
-    domAddressInput.addEventListener('invalid', onDomAddressInvalid);
 
     domTimeInSelect.addEventListener('change', onDomTimeInChange);
     domTimeOutSelect.addEventListener('change', onDomTimeOutChange);
@@ -72,37 +82,26 @@
 
     if (target.value.length < window.data.advert.title.MIN_LENGTH) {
       domTitleInput.setCustomValidity('Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH);
+    } else if (target.value.length > window.data.advert.title.MAX_LENGTH) {
+      domTitleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
     } else {
+      setDomFieldValidColor(domTitleInput);
       domTitleInput.setCustomValidity('');
     }
   };
 
   var onDomTitleInvalid = function () {
-    if (!domTitleInput.validity.valid) {
-      setDomFieldErrorColor(domTitleInput);
-
-      if (domTitleInput.validity.valueMissing) {
-        domTitleInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      } else if (domTitleInput.validity.tooLong) {
-        domTitleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
-      }
-    } else {
-      domTitleInput.setCustomValidity('');
-      setDomFieldValidColor(domTitleInput);
-    }
+    onDomFieldInvalid(domTitleInput);
   };
 
 
   /* Тип жилья и цена */
 
-
-  var getTypes = function () {
-    return Object.keys(window.data.advert.type);
-  };
-
   var getMinPrices = function () {
     var array = [];
+
     var type = window.data.advert.type;
+
 
     for (var key in type) {
       if (type.hasOwnProperty(key)) {
@@ -110,21 +109,25 @@
       }
     }
 
+
     return array;
   };
 
-  var lodgeTypes = getTypes();
+
+  var lodgeTypes = Object.keys(window.data.advert.type);
   var minPrices = getMinPrices();
 
+
   var onDomTypeChange = function () {
-    window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setInputMinNumber);
+    window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setDomFieldMinNumber);
   };
 
   var onDomPriceInput = function (evt) {
     var target = evt.target;
 
     var currentMinPrice = Number(domPriceInput.getAttribute('min'));
-    var lodgeTypeValue = window.data.advert.type[lodgeTypes[minPrices.indexOf(currentMinPrice)]].VALUE;
+    var lodgeTypeValue = window.data.advert.type[lodgeTypes[minPrices.indexOf(currentMinPrice)]].RUS_VALUE;
+
 
     if (Number(target.value) < currentMinPrice) {
       domPriceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
@@ -137,16 +140,7 @@
   };
 
   var onDomPriceInvalid = function () {
-    if (!domPriceInput.validity.valid) {
-      setDomFieldErrorColor(domPriceInput);
-
-      if (domPriceInput.validity.valueMissing) {
-        domPriceInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      }
-    } else {
-      setDomFieldValidColor(domPriceInput);
-      domPriceInput.setCustomValidity('');
-    }
+    onDomFieldInvalid(domPriceInput);
   };
 
 
@@ -157,10 +151,12 @@
     var rooms = Object.keys(window.data.advert.room);
     var fragment = document.createDocumentFragment();
 
+
     domCapacitySelect.options.length = 0;
 
     if (domRoomSelect.value === rooms[rooms.length - 1]) {
-      fragment.appendChild(renderSelectOption('0', window.data.advert.capacity.VALUES[0]));
+      fragment.appendChild(renderSelectOption(String(window.data.advert.capacity.EMPTY_ELEMENT_INDEX),
+          window.data.advert.capacity.VALUES[window.data.advert.capacity.EMPTY_ELEMENT_INDEX]));
     } else {
       for (var i = rooms.indexOf(domRoomSelect.value); i >= 0; i--) {
         fragment.appendChild(renderSelectOption(String(i + 1), window.data.advert.capacity.VALUES[i + 1]));
@@ -178,18 +174,8 @@
   /* Адрес */
 
 
-  var onDomAddressInvalid = function () {
-    if (domAddressInput.validity.valueMissing) {
-      domAddressInput.setCustomValidity(validationMessage.EMPTY_FIELD);
-      setDomFieldErrorColor(domAddressInput);
-    } else {
-      domAddressInput.setCustomValidity('');
-      setDomFieldValidColor(domAddressInput);
-    }
-  };
-
   var setAddressDefaultValue = function () {
-    var mainPinPointerDefaultLocation = window.mapPin.getMainPointerDefaultLocation();
+    var mainPinPointerDefaultLocation = window.pin.getMainPointerDefaultLocation();
 
     domAddressInput.setAttribute('value', createLocationString(mainPinPointerDefaultLocation.X, mainPinPointerDefaultLocation.Y));
   };
@@ -200,12 +186,12 @@
 
   var onDomTimeInChange = function () {
     window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
-        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
+        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setDomFieldValue);
   };
 
   var onDomTimeOutChange = function () {
     window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
-        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
+        window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setDomFieldValue);
   };
 
 
@@ -218,12 +204,12 @@
         new FormData(domForm),
         function () {
           domForm.reset();
-          window.mapPin.resetMainPointerLocation();
+          window.pin.resetMainPointerLocation();
 
           window.utility.showSystemMessage('Данные формы отправлены успешно', 'success');
         },
-        function () {
-          window.utility.showSystemMessage('Произошла ошибка при отправке формы', 'error');
+        function (errorMessage) {
+          window.utility.showSystemMessage(errorMessage, 'error');
         });
 
     evt.preventDefault();
@@ -233,12 +219,12 @@
   /* main */
 
 
-  window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setInputMinNumber);
+  window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setDomFieldMinNumber);
 
   setCapacityOptions();
 
   window.synchronizeDomFields(domTimeInSelect, domTimeOutSelect,
-      window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setInputValue);
+      window.data.advert.timeIn.VALUES, window.data.advert.timeOut.VALUES, setDomFieldValue);
 
   setAddressDefaultValue();
 

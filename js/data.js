@@ -15,19 +15,23 @@
   window.data.advert.type = {};
 
   window.data.advert.type.bungalo = {};
-  window.data.advert.type.bungalo.VALUE = 'Бунгало';
+  window.data.advert.type.bungalo.ENG_VALUE = 'bungalo';
+  window.data.advert.type.bungalo.RUS_VALUE = 'Бунгало';
   window.data.advert.type.bungalo.MIN_PRICE = 0;
 
   window.data.advert.type.flat = {};
-  window.data.advert.type.flat.VALUE = 'Квартира';
+  window.data.advert.type.flat.ENG_VALUE = 'bungalo';
+  window.data.advert.type.flat.RUS_VALUE = 'Квартира';
   window.data.advert.type.flat.MIN_PRICE = 1000;
 
   window.data.advert.type.house = {};
-  window.data.advert.type.house.VALUE = 'Дом';
+  window.data.advert.type.house.ENG_VALUE = 'bungalo';
+  window.data.advert.type.house.RUS_VALUE = 'Дом';
   window.data.advert.type.house.MIN_PRICE = 5000;
 
   window.data.advert.type.palace = {};
-  window.data.advert.type.palace.VALUE = 'Дворец';
+  window.data.advert.type.palace.ENG_VALUE = 'bungalo';
+  window.data.advert.type.palace.RUS_VALUE = 'Дворец';
   window.data.advert.type.palace.MIN_PRICE = 10000;
 
   window.data.advert.price = {};
@@ -41,6 +45,7 @@
 
   window.data.advert.capacity = {};
   window.data.advert.capacity.VALUES = ['не для гостей', 'для 1 гостя', 'для 2 гостей', 'для 3 гостей'];
+  window.data.advert.capacity.EMPTY_ELEMENT_INDEX = 0;
 
   window.data.advert.timeIn = {};
   window.data.advert.timeIn.VALUES = ['12:00', '13:00', '14:00'];

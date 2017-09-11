@@ -25,11 +25,11 @@
   };
 
   window.utility.isArrayInOtherArray = function (array, otherArray) {
-    var otherArrayElementList = this.turnArrayIntoObject(otherArray);
+    var otherArrayElementStore = this.turnArrayIntoObject(otherArray);
 
 
     for (var i = 0; i < array.length; i++) {
-      if (!otherArrayElementList[array[i]]) {
+      if (!otherArrayElementStore[array[i]]) {
         return false;
       }
     }

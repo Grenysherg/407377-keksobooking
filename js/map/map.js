@@ -8,42 +8,42 @@
 
   var domActiveOrdinaryPin = null;
 
-  var advertList = {};
+  var advertStore = {};
 
 
   var openCard = function (domOrdinaryPin, advertListKey) {
     if (domActiveOrdinaryPin) {
-      window.mapPin.removeOrdinaryActiveState(domActiveOrdinaryPin);
+      window.pin.removeOrdinaryActiveState(domActiveOrdinaryPin);
     } else {
-      window.mapCard.addVisibilityState();
+      window.card.addVisibilityState();
 
       addCardCloseEvents();
       document.addEventListener('keydown', onDocumentEscPress);
     }
 
-    window.mapPin.addOrdinaryActiveState(domOrdinaryPin);
+    window.pin.addOrdinaryActiveState(domOrdinaryPin);
     domActiveOrdinaryPin = domOrdinaryPin;
 
-    window.mapCard.render(advertList[advertListKey]);
+    window.card.render(advertStore[advertListKey]);
   };
 
   var closeCard = function () {
-    window.mapPin.removeOrdinaryActiveState(domActiveOrdinaryPin);
+    window.pin.removeOrdinaryActiveState(domActiveOrdinaryPin);
     domActiveOrdinaryPin = null;
 
-    window.mapCard.removeVisibilityState();
+    window.card.removeVisibilityState();
 
     removeCardCloseEvents();
     document.removeEventListener('keydown', onDocumentEscPress);
   };
 
   var onDomPinMapClick = function (evt) {
-    window.mapPin.doActionIfChosen(evt.target, openCard);
+    window.pin.doActionIfChosen(evt.target, openCard);
   };
 
   var onDomPinMapEnterPress = function (evt) {
     if (window.key.isEnterPressed(evt)) {
-      window.mapPin.doActionIfChosen(evt.target, openCard);
+      window.pin.doActionIfChosen(evt.target, openCard);
     }
   };
 
@@ -89,9 +89,9 @@
   window.map = {};
 
   window.map.update = function (newAdvertList) {
-    advertList = newAdvertList;
+    advertStore = newAdvertList;
 
-    window.mapPin.showAndHideOrdinaryPins(advertList);
+    window.pin.showAndHideOrdinaryPins(advertStore);
 
     if (domActiveOrdinaryPin) {
       if (domActiveOrdinaryPin.classList.contains('hidden')) {
