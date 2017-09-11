@@ -38,7 +38,7 @@
   var filtrateByType = function (typeString, filterTypeValue) {
     switch (filterTypeValue) {
       case 'any':
-        return typeString === typeString;
+        return true;
       case 'bungalo':
         return typeString === filter.type['bungalo'];
       case 'flat':
@@ -53,7 +53,7 @@
   var filtrateByPrice = function (priceNumber, filterPriceValue) {
     switch (filterPriceValue) {
       case 'any':
-        return priceNumber === priceNumber;
+        return true;
       case 'low':
         return priceNumber < filter.price.MIN;
       case 'middle':
@@ -68,7 +68,7 @@
   var filtrateByRoom = function (roomAmount, filterRoomValue) {
     switch (filterRoomValue) {
       case 'any':
-        return roomAmount === roomAmount;
+        return true;
       case '1':
         return roomAmount === filter.room['1'];
       case '2':
@@ -83,7 +83,7 @@
   var filtrateByCapacity = function (capacityNumber, filterCapacityValue) {
     switch (filterCapacityValue) {
       case 'any':
-        return capacityNumber === capacityNumber;
+        return true;
       case '1':
         return capacityNumber === filter.capacity['1'];
       case '2':
