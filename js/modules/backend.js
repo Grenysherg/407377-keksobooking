@@ -2,34 +2,52 @@
 
 (function () {
   var status = {};
-  status['ok'] = 200;
+  status['OK'] = 200;
 
 
-  var setup = function (onSuccess, onError) {
+  var setupXhr = function (onActionSuccess, onActionError) {
     var xhr = new XMLHttpRequest();
-
     xhr.responseType = 'json';
     xhr.timeout = 1000;
 
+
     var onXhrLoad = function () {
-      if (xhr.status === status['ok']) {
-        onSuccess(xhr.response);
+      if (xhr.status === status['OK']) {
+        onActionSuccess(xhr.response);
       } else {
-        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
+        onActionError('Ошибка. Статус: ' + xhr.status + ' (' + xhr.statusText + ')');
       }
+
+      removeXhrEvents();
     };
 
     var onXhrError = function () {
-      onError('Произошла ошибка соединения');
+      onActionError('Произошла ошибка соединения');
+
+      removeXhrEvents();
     };
 
     var onXhrTimeout = function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onActionError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
+
+      removeXhrEvents();
     };
 
-    xhr.addEventListener('load', onXhrLoad);
-    xhr.addEventListener('error', onXhrError);
-    xhr.addEventListener('timeout', onXhrTimeout);
+    var addXhrEvents = function () {
+      xhr.addEventListener('load', onXhrLoad);
+      xhr.addEventListener('error', onXhrError);
+      xhr.addEventListener('timeout', onXhrTimeout);
+    };
+
+    var removeXhrEvents = function () {
+      xhr.removeEventListener('load', onXhrLoad);
+      xhr.removeEventListener('error', onXhrError);
+      xhr.removeEventListener('timeout', onXhrTimeout);
+    };
+
+
+    addXhrEvents();
+
 
     return xhr;
   };
@@ -37,17 +55,15 @@
 
   window.backend = {};
 
-  window.backend.load = function (url, onSuccess, onError) {
-    var xhr = setup(onSuccess, onError);
-
-    xhr.open('GET', url);
+  window.backend.load = function (urlString, onLoadSuccess, onLoadError) {
+    var xhr = setupXhr(onLoadSuccess, onLoadError);
+    xhr.open('GET', urlString);
     xhr.send();
   };
 
-  window.backend.save = function (url, data, onSuccess, onError) {
-    var xhr = setup(onSuccess, onError);
-
-    xhr.open('POST', url);
+  window.backend.save = function (urlString, data, onSaveSuccess, onSaveError) {
+    var xhr = setupXhr(onSaveSuccess, onSaveError);
+    xhr.open('POST', urlString);
     xhr.send(data);
   };
 })();
