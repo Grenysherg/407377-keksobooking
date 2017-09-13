@@ -94,7 +94,7 @@
     window.pin.showAndHideOrdinaryPins(advertStore);
 
     if (domActiveOrdinaryPin) {
-      if (window.pin.isActiveOrdinaryHidden) {
+      if (window.pin.isActiveOrdinaryHidden(domActiveOrdinaryPin)) {
         closeCard();
       }
     }
