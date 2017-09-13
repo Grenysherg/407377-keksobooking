@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var AVATAR_PREVIEW_DEFAULT_SRC = 'img/muffin.png';
+
+  var PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT = 16;
+
   var domAvatarInput = document.querySelector('.notice__photo input[type="file"]');
   var domAvatarPreview = document.querySelector('.notice__photo img');
 
@@ -17,12 +21,6 @@
   var domPhoto = domForm.querySelector('.form__photo-container');
   var domPhotoInput = domPhoto.querySelector('input[type="file"]');
   var domPhotoPreviewTemplate = document.querySelector('#photo-template').content;
-
-  var AVATAR_PREVIEW_DEFAULT_SRC = domAvatarPreview.getAttribute('src');
-
-  var PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT = domPhoto.querySelectorAll('.form__photo').length;
-
-  var IMG_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 
   var createLocationString = function (coordinateXValue, coordinateYValue) {
@@ -101,7 +99,7 @@
     var avatar = domAvatarInput.files[0];
 
 
-    if (window.file.isRightType(avatar, IMG_FILE_TYPES)) {
+    if (window.file.isRightType(avatar, window.file.IMG_TYPES)) {
       window.file.uploadImgPreview(avatar, domAvatarPreview);
     }
   };
@@ -343,7 +341,7 @@
 
 
     Array.from(domFiles).forEach(function (it) {
-      if (window.file.isRightType(it, IMG_FILE_TYPES)) {
+      if (window.file.isRightType(it, window.file.IMG_TYPES)) {
         imgFiles.push(it);
       }
     });
