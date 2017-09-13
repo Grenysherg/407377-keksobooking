@@ -5,6 +5,9 @@
 
   var PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT = 16;
 
+  var FILE_IMG_SORT = 'img';
+
+
   var domAvatarInput = document.querySelector('.notice__photo input[type="file"]');
   var domAvatarPreview = document.querySelector('.notice__photo img');
 
@@ -99,7 +102,7 @@
     var avatar = domAvatarInput.files[0];
 
 
-    if (window.file.isRightType(avatar, 'img')) {
+    if (window.file.isRightType(avatar, FILE_IMG_SORT)) {
       window.file.uploadImgPreview(avatar, domAvatarPreview);
     }
   };
@@ -341,7 +344,7 @@
 
 
     Array.from(domFiles).forEach(function (it) {
-      if (window.file.isRightType(it, 'img')) {
+      if (window.file.isRightType(it, FILE_IMG_SORT)) {
         imgFiles.push(it);
       }
     });
