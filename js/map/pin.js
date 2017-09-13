@@ -126,13 +126,17 @@
     domOrdinaryPin.style.cursor = 'pointer';
   };
 
-  window.pin.showAndHideOrdinaryPins = function (advertList) {
+  window.pin.showAndHideOrdinaryPins = function (advertStore) {
     Array.from(domOrdinaryPinContainer.children).forEach(function (it, index) {
-      if (advertList[String(index)]) {
+      if (advertStore[String(index)]) {
         addOrdinaryVisibilityState(it);
       } else {
         removeOrdinaryVisibilityState(it);
       }
     });
+  };
+
+  window.pin.isActiveOrdinaryHidden = function (domActiveOrdinaryPin) {
+    return domActiveOrdinaryPin.classList.contains('hidden');
   };
 })();
