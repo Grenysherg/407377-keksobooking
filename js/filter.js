@@ -97,12 +97,12 @@
 
   var getFeatures = function () {
     return Array.from(domFilterFeaturesInput)
-        .filter(function (it) {
-          return it.checked;
-        })
-        .map(function (it) {
-          return it.value;
-        });
+      .filter(function (it) {
+        return it.checked;
+      })
+      .map(function (it) {
+        return it.value;
+      });
   };
 
   var createAdvertStore = function () {
