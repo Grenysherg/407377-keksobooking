@@ -99,7 +99,7 @@
     var avatar = domAvatarInput.files[0];
 
 
-    if (window.file.isRightType(avatar, window.file.IMG_TYPES)) {
+    if (window.file.isRightType(avatar, 'img')) {
       window.file.uploadImgPreview(avatar, domAvatarPreview);
     }
   };
@@ -341,7 +341,7 @@
 
 
     Array.from(domFiles).forEach(function (it) {
-      if (window.file.isRightType(it, window.file.IMG_TYPES)) {
+      if (window.file.isRightType(it, 'img')) {
         imgFiles.push(it);
       }
     });

@@ -1,14 +1,22 @@
 'use strict';
 
 (function () {
+  var IMG_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+
   window.file = {};
 
-  window.file.IMG_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  window.file.isRightType = function (file, fileTypes) {
-    return fileTypes.some(function (it) {
-      return file.name.toLowerCase().endsWith(it);
-    });
+  window.file.isRightType = function (file, fileSortString) {
+    switch (fileSortString) {
+      case 'img':
+        return IMG_FILE_TYPES.some(function (it) {
+          return file.name.toLowerCase().endsWith(it);
+        });
+    }
+
+
+    return false;
   };
 
   window.file.uploadImgPreview = function (file, domFileImgPreview) {
