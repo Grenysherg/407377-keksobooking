@@ -11,7 +11,7 @@
   var advertStore = {};
 
 
-  var openCard = function (domOrdinaryPin, advertListKey) {
+  var openCard = function (domOrdinaryPin, advertStoreKey) {
     if (domActiveOrdinaryPin) {
       window.pin.removeOrdinaryActiveState(domActiveOrdinaryPin);
     } else {
@@ -24,7 +24,7 @@
     window.pin.addOrdinaryActiveState(domOrdinaryPin);
     domActiveOrdinaryPin = domOrdinaryPin;
 
-    window.card.render(advertStore[advertListKey]);
+    window.card.render(advertStore[advertStoreKey]);
   };
 
   var closeCard = function () {
@@ -88,13 +88,13 @@
 
   window.map = {};
 
-  window.map.update = function (newAdvertList) {
-    advertStore = newAdvertList;
+  window.map.update = function (newAdvertStore) {
+    advertStore = newAdvertStore;
 
     window.pin.showAndHideOrdinaryPins(advertStore);
 
     if (domActiveOrdinaryPin) {
-      if (domActiveOrdinaryPin.classList.contains('hidden')) {
+      if (window.pin.isActiveOrdinaryHidden) {
         closeCard();
       }
     }

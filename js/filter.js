@@ -8,7 +8,7 @@
   var domFilterPriceSelect = domFilterForm.querySelector('#housing_price');
   var domFilterRoomSelect = domFilterForm.querySelector('#housing_room-number');
   var domFilterCapacitySelect = domFilterForm.querySelector('#housing_guests-number');
-  var domFilterFeaturesInput = domFilterForm.querySelectorAll('input[type="checkbox"');
+  var domFilterFeaturesInput = domFilterForm.querySelectorAll('input[type="checkbox"]');
 
   var adverts = [];
   var advertStore = {};

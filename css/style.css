@@ -82,6 +82,53 @@ select option:hover {
     background-color: #ff6547;
 }
 
+.form__photo {
+  position: relative;
+}
+
+.form__photo:hover .cross {
+  display: block;
+}
+
+.cross {
+  box-sizing: border-box;
+  
+  position: absolute;
+  top: 0;
+  right: 0;
+  
+  display: none;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  
+  background-color: #dadad4;
+  border-radius: 50%;
+  border: none;
+  
+  cursor: pointer;
+}
+
+.cross:before,
+.cross:after {
+  content: "";
+  
+  position: absolute;
+  top: 0;
+  left: 9px;
+  
+  height: 20px;
+  width: 2px;
+  
+  background-color: white;
+}
+.cross:before {
+  transform: rotate(45deg);
+}
+.cross:after {
+  transform: rotate(-45deg);
+}
+
 .system-message {
   box-sizing: border-box;
   
@@ -257,6 +304,8 @@ select option:hover {
 
 .upload input {
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 2;
     opacity: 0;
     width:100%;
