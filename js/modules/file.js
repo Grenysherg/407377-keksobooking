@@ -6,7 +6,6 @@
 
   window.file = {};
 
-
   window.file.isRightType = function (file, fileSortString) {
     switch (fileSortString) {
       case 'img':

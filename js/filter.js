@@ -3,6 +3,22 @@
 (function () {
   var INITIAL_ADVERT_LENGTH = 3;
 
+  var ANY_VALUE = 'any';
+
+  var filter = {};
+
+  filter.price = {};
+  filter.price.MIN = 10000;
+  filter.price.MAX = 50000;
+
+  filter.price.value = {};
+  filter.price.value.LOW = 'low';
+  filter.price.value.MIDDLE = 'middle';
+  filter.price.value.HIGH = 'high';
+
+  var adverts = [];
+  var advertStore = {};
+
   var domFilterForm = document.querySelector('.tokyo__filters');
   var domFilterTypeSelect = domFilterForm.querySelector('#housing_type');
   var domFilterPriceSelect = domFilterForm.querySelector('#housing_price');
@@ -10,87 +26,28 @@
   var domFilterCapacitySelect = domFilterForm.querySelector('#housing_guests-number');
   var domFilterFeaturesInput = domFilterForm.querySelectorAll('input[type="checkbox"]');
 
-  var adverts = [];
-  var advertStore = {};
 
-  var filter = {};
-
-  filter.type = {};
-  filter.type['bungalo'] = 'bungalo';
-  filter.type['flat'] = 'flat';
-  filter.type['house'] = 'house';
-
-  filter.price = {};
-  filter.price.MIN = 10000;
-  filter.price.MAX = 50000;
-
-  filter.room = {};
-  filter.room['1'] = 1;
-  filter.room['2'] = 2;
-  filter.room['3'] = 3;
-
-  filter.capacity = {};
-  filter.capacity['1'] = 1;
-  filter.capacity['2'] = 2;
-  filter.capacity['3'] = 3;
-
-
-  var filtrateByType = function (typeString, filterTypeValue) {
-    switch (filterTypeValue) {
-      case 'any':
-        return true;
-      case 'bungalo':
-        return typeString === filter.type['bungalo'];
-      case 'flat':
-        return typeString === filter.type['flat'];
-      case 'house':
-        return typeString === filter.type['house'];
+  var isAdvertHaveRightParameter = function (advertParameterValue, rightParameterValue) {
+    if (rightParameterValue !== ANY_VALUE) {
+      return String(advertParameterValue) === rightParameterValue;
     }
 
-    return false;
+
+    return true;
   };
 
-  var filtrateByPrice = function (priceNumber, filterPriceValue) {
+  var isAdvertHaveRightPrice = function (priceNumber, filterPriceValue) {
     switch (filterPriceValue) {
-      case 'any':
+      case ANY_VALUE:
         return true;
-      case 'low':
+      case filter.price.value.LOW:
         return priceNumber < filter.price.MIN;
-      case 'middle':
+      case filter.price.value.MIDDLE:
         return priceNumber >= filter.price.MIN && priceNumber <= filter.price.MAX;
-      case 'high':
+      case filter.price.value.HIGH:
         return priceNumber > filter.price.MAX;
     }
 
-    return false;
-  };
-
-  var filtrateByRoom = function (roomAmount, filterRoomValue) {
-    switch (filterRoomValue) {
-      case 'any':
-        return true;
-      case '1':
-        return roomAmount === filter.room['1'];
-      case '2':
-        return roomAmount === filter.room['2'];
-      case '3':
-        return roomAmount === filter.room['3'];
-    }
-
-    return false;
-  };
-
-  var filtrateByCapacity = function (capacityNumber, filterCapacityValue) {
-    switch (filterCapacityValue) {
-      case 'any':
-        return true;
-      case '1':
-        return capacityNumber === filter.capacity['1'];
-      case '2':
-        return capacityNumber === filter.capacity['2'];
-      case '3':
-        return capacityNumber === filter.capacity['3'];
-    }
 
     return false;
   };
@@ -118,6 +75,7 @@
   var createFilterAdvertStore = function (filterAdverts) {
     var object = {};
 
+
     for (var key in advertStore) {
       if (filterAdverts.indexOf(advertStore[key]) !== -1) {
         object[key] = advertStore[key];
@@ -129,20 +87,24 @@
   };
 
   var filtrateAdverts = function () {
-    window.map.update(createFilterAdvertStore(adverts.filter(function (it) {
-      return filtrateByType(it.offer.type, domFilterTypeSelect.value)
-        && filtrateByPrice(it.offer.price, domFilterPriceSelect.value)
-        && filtrateByRoom(it.offer.rooms, domFilterRoomSelect.value)
-        && filtrateByCapacity(it.offer.guests, domFilterCapacitySelect.value)
+    return adverts.filter(function (it) {
+      return isAdvertHaveRightParameter(it.offer.type, domFilterTypeSelect.value)
+        && isAdvertHaveRightPrice(it.offer.price, domFilterPriceSelect.value)
+        && isAdvertHaveRightParameter(it.offer.rooms, domFilterRoomSelect.value)
+        && isAdvertHaveRightParameter(it.offer.guests, domFilterCapacitySelect.value)
         && window.utility.isArrayInOtherArray(getFeatures(), it.offer.features);
-    })));
+    });
+  };
+
+  var changeFilter = function () {
+    window.map.update(createFilterAdvertStore(filtrateAdverts()));
   };
 
 
   window.backend.load(
       'https://1510.dump.academy/keksobooking/data',
       function (loadAdverts) {
-        adverts = loadAdverts;
+        adverts = loadAdverts.concat();
         advertStore = createAdvertStore();
 
         window.pin.renderOrdinaryCollection(loadAdverts);
@@ -155,6 +117,6 @@
   );
 
   domFilterForm.addEventListener('change', function () {
-    window.debounce(filtrateAdverts);
+    window.debounce(changeFilter);
   });
 })();

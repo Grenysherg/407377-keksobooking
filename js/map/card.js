@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var domCard = document.querySelector('#offer-dialog');
   var domCardTemplate = document.querySelector('#lodge-template').content;
 
 
@@ -53,11 +52,11 @@
   window.card = {};
 
   window.card.render = function (advert) {
-    var domCardPanel = domCard.querySelector('.dialog__panel');
+    var domCardPanel = window.mapData.domCard.querySelector('.dialog__panel');
     var domCardNewPanel = domCardTemplate.cloneNode(true);
 
 
-    domCard.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
+    window.mapData.domCard.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
 
     domCardNewPanel.querySelector('.lodge__title').textContent = advert.offer.title;
     domCardNewPanel.querySelector('.lodge__address').textContent = advert.offer.address;
@@ -71,14 +70,14 @@
     domCardNewPanel.querySelector('.lodge__description').textContent = advert.offer.description;
     domCardNewPanel.querySelector('.lodge__photos').appendChild(renderPreviewPhotos(advert.offer.photos));
 
-    domCard.replaceChild(domCardNewPanel, domCardPanel);
+    window.mapData.domCard.replaceChild(domCardNewPanel, domCardPanel);
   };
 
   window.card.addVisibilityState = function () {
-    domCard.classList.remove('hidden');
+    window.mapData.domCard.classList.remove('hidden');
   };
 
   window.card.removeVisibilityState = function () {
-    domCard.classList.add('hidden');
+    window.mapData.domCard.classList.add('hidden');
   };
 })();

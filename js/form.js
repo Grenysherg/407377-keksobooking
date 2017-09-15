@@ -131,6 +131,7 @@
 
   /* Тип жилья и цена */
 
+
   var getMinPrices = function () {
     var array = [];
 
@@ -192,12 +193,12 @@
     domCapacitySelect.options.length = 0;
 
     if (domRoomSelect.value === rooms[rooms.length - 1]) {
-      fragment.appendChild(renderSelectOption(String(window.data.advert.capacity.EMPTY_ELEMENT_INDEX),
-          window.data.advert.capacity.VALUES[window.data.advert.capacity.EMPTY_ELEMENT_INDEX]));
+      fragment.appendChild(renderSelectOption(String(window.data.advert.capacity.empty.INDEX),
+          window.data.advert.capacity.empty.VALUE));
     } else {
-      for (var i = rooms.indexOf(domRoomSelect.value); i >= 0; i--) {
-        fragment.appendChild(renderSelectOption(String(i + 1), window.data.advert.capacity.VALUES[i + 1]));
-      }
+      window.data.advert.capacity.VALUES.slice(0, Number(domRoomSelect.value)).reverse().forEach(function (it, index) {
+        fragment.appendChild(renderSelectOption(String(index), it));
+      });
     }
 
     domCapacitySelect.appendChild(fragment);
