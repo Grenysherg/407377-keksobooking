@@ -44,8 +44,11 @@
   window.data.advert.room['100'] = '100 комнат';
 
   window.data.advert.capacity = {};
-  window.data.advert.capacity.VALUES = ['не для гостей', 'для 1 гостя', 'для 2 гостей', 'для 3 гостей'];
-  window.data.advert.capacity.EMPTY_ELEMENT_INDEX = 0;
+  window.data.advert.capacity.VALUES = ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'];
+
+  window.data.advert.capacity.empty = {};
+  window.data.advert.capacity.empty.INDEX = 0;
+  window.data.advert.capacity.empty.VALUE = 'не для гостей';
 
   window.data.advert.timeIn = {};
   window.data.advert.timeIn.VALUES = ['12:00', '13:00', '14:00'];

@@ -52,6 +52,10 @@
 
   window.card = {};
 
+  window.card.getDomElement = function () {
+    return domCard;
+  };
+
   window.card.render = function (advert) {
     var domCardPanel = domCard.querySelector('.dialog__panel');
     var domCardNewPanel = domCardTemplate.cloneNode(true);

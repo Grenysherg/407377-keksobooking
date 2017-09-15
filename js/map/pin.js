@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var domPinMap = document.querySelector('.tokyo__pin-map');
-  var domMainPin = domPinMap.querySelector('.pin__main');
-  var domOrdinaryPinContainer = domPinMap.querySelector('.pin__container');
-  var domOrdinaryPinTemplate = document.querySelector('#pin-template').content;
-
   var pin = {};
 
   pin.ordinary = {};
@@ -14,19 +9,27 @@
   pin.ordinary.DATASET_NAME = 'data-adverts-element-index';
 
   pin.main = {};
-  pin.main.WIDTH = domMainPin.clientWidth;
-  pin.main.HEIGHT = domMainPin.clientHeight;
+  pin.main.WIDTH = 75;
+  pin.main.HEIGHT = 94;
+
+  pin.main.defaultLocation = {};
+  pin.main.defaultLocation.X = 600;
+  pin.main.defaultLocation.Y = 300;
 
   pin.main.pointerDefaultLocation = {};
-  pin.main.pointerDefaultLocation.X = parseInt(getComputedStyle(domMainPin).left, 10)
-    + window.utility.getHalfInteger(pin.main.WIDTH);
-  pin.main.pointerDefaultLocation.Y = parseInt(getComputedStyle(domMainPin).top, 10) + pin.main.HEIGHT;
+  pin.main.pointerDefaultLocation.X = pin.main.defaultLocation.X + window.utility.getHalfInteger(pin.main.WIDTH);
+  pin.main.pointerDefaultLocation.Y = pin.main.defaultLocation.Y + pin.main.HEIGHT;
 
   var mainPinDragArea = {};
   mainPinDragArea.minX = window.data.advert.address.x.MIN - window.utility.getHalfInteger(pin.main.WIDTH);
   mainPinDragArea.maxX = window.data.advert.address.x.MAX - window.utility.getHalfInteger(pin.main.WIDTH);
   mainPinDragArea.minY = window.data.advert.address.y.MIN - pin.main.HEIGHT;
   mainPinDragArea.maxY = window.data.advert.address.y.MAX - pin.main.HEIGHT;
+
+  var domPinMap = document.querySelector('.tokyo__pin-map');
+  var domMainPin = domPinMap.querySelector('.pin__main');
+  var domOrdinaryPinContainer = domPinMap.querySelector('.pin__container');
+  var domOrdinaryPinTemplate = document.querySelector('#pin-template').content;
 
 
   var renderOrdinaryPin = function (advert, advertsElementIndex) {
@@ -75,6 +78,10 @@
 
 
   window.pin = {};
+
+  window.pin.getDomMap = function () {
+    return domPinMap;
+  };
 
   window.pin.getMainPointerDefaultLocation = function () {
     return pin.main.pointerDefaultLocation;

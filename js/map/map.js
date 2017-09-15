@@ -1,14 +1,11 @@
 'use strict';
 
 (function () {
-  var domPinMap = document.querySelector('.tokyo__pin-map');
-
-  var domCard = document.querySelector('#offer-dialog');
-  var domCardClose = domCard.querySelector('.dialog__close');
-
   var domActiveOrdinaryPin = null;
 
   var advertStore = {};
+
+  var domCardClose = window.card.getDomElement().querySelector('.dialog__close');
 
 
   var openCard = function (domOrdinaryPin, advertStoreKey) {
@@ -42,7 +39,7 @@
   };
 
   var onDomPinMapEnterPress = function (evt) {
-    if (window.key.isEnterPressed(evt)) {
+    if (window.utility.isEnterPressed(evt)) {
       window.pin.doActionIfChosen(evt.target, openCard);
     }
   };
@@ -56,20 +53,20 @@
   var onDomCardCloseEnterPress = function (evt) {
     evt.preventDefault();
 
-    if (window.key.isEnterPressed(evt)) {
+    if (window.utility.isEnterPressed(evt)) {
       closeCard();
     }
   };
 
   var onDocumentEscPress = function (evt) {
-    if (window.key.isEscPressed(evt)) {
+    if (window.utility.isEscPressed(evt)) {
       closeCard();
     }
   };
 
   var addPinMapEvents = function () {
-    domPinMap.addEventListener('click', onDomPinMapClick);
-    domPinMap.addEventListener('keydown', onDomPinMapEnterPress);
+    window.pin.getDomMap().addEventListener('click', onDomPinMapClick);
+    window.pin.getDomMap().addEventListener('keydown', onDomPinMapEnterPress);
   };
 
   var addCardCloseEvents = function () {

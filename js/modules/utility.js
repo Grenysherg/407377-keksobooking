@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var keyCode = {};
+  keyCode.ENTER = 13;
+  keyCode.ESC = 27;
+
+
   window.utility = {};
 
   window.utility.getHalfInteger = function (integer) {
@@ -12,30 +17,25 @@
     var arrayStoreElement = null;
 
 
-    for (var i = array.length - 1; i > 0; i--) {
-      arrayElementNewIndex = Math.floor(Math.random() * (i + 1));
+    array.reverse().forEach(function (it, index) {
+      arrayElementNewIndex = Math.floor(Math.random() * (index + 1));
 
       arrayStoreElement = array[arrayElementNewIndex];
-      array[arrayElementNewIndex] = array[i];
-      array[i] = arrayStoreElement;
-    }
+      array[arrayElementNewIndex] = it;
+      it = arrayStoreElement;
+    });
 
 
     return array;
   };
 
   window.utility.isArrayInOtherArray = function (array, otherArray) {
-    var otherArrayElementStore = this.turnArrayIntoObject(otherArray);
+    var otherArrayElementStore = this.turnArrayIntoObject(otherArray); /* otherArrayElementStore - это объект, а не массив */
 
 
-    for (var i = 0; i < array.length; i++) {
-      if (!otherArrayElementStore[array[i]]) {
-        return false;
-      }
-    }
-
-
-    return true;
+    return !array.some(function (it) {
+      return !otherArrayElementStore[it];
+    });
   };
 
   window.utility.turnArrayIntoObject = function (array) {
@@ -80,5 +80,13 @@
     domSystemMessage.querySelector('.system-message__text').textContent = text;
 
     domSystemMessageClose.addEventListener('click', onDomSystemMessageCloseClick);
+  };
+
+  window.utility.isEnterPressed = function (evt) {
+    return evt.keyCode === keyCode.ENTER;
+  };
+
+  window.utility.isEscPressed = function (evt) {
+    return evt.keyCode === keyCode.ESC;
   };
 })();
