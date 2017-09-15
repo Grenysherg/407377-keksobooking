@@ -87,12 +87,14 @@
   };
 
   var filtrateAdverts = function () {
+    var filterFeatures = getFeatures();
+
     return adverts.filter(function (it) {
       return isAdvertHaveRightParameter(it.offer.type, domFilterTypeSelect.value)
         && isAdvertHaveRightPrice(it.offer.price, domFilterPriceSelect.value)
         && isAdvertHaveRightParameter(it.offer.rooms, domFilterRoomSelect.value)
         && isAdvertHaveRightParameter(it.offer.guests, domFilterCapacitySelect.value)
-        && window.utility.isArrayInOtherArray(getFeatures(), it.offer.features);
+        && window.utility.isArrayInOtherArray(filterFeatures, it.offer.features);
     });
   };
 

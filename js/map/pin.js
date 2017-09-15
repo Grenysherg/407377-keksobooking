@@ -26,8 +26,9 @@
   mainPinDragArea.minY = window.data.advert.address.y.MIN - pin.main.HEIGHT;
   mainPinDragArea.maxY = window.data.advert.address.y.MAX - pin.main.HEIGHT;
 
-  var domMainPin = window.mapData.domPinMap.querySelector('.pin__main');
-  var domOrdinaryPinContainer = window.mapData.domPinMap.querySelector('.pin__container');
+  var domPinMap = document.querySelector('.tokyo__pin-map');
+  var domMainPin = domPinMap.querySelector('.pin__main');
+  var domOrdinaryPinContainer = domPinMap.querySelector('.pin__container');
   var domOrdinaryPinTemplate = document.querySelector('#pin-template').content;
 
 
@@ -78,6 +79,10 @@
 
   window.pin = {};
 
+  window.pin.getDomMap = function () {
+    return domPinMap;
+  };
+
   window.pin.getMainPointerDefaultLocation = function () {
     return pin.main.pointerDefaultLocation;
   };
@@ -100,11 +105,11 @@
 
   window.pin.doActionIfChosen = function (domElement, cb) {
     var elementDataset = null;
-    var domActivePin = window.mapData.domPinMap.querySelector('.pin--active');
+    var domActivePin = domPinMap.querySelector('.pin--active');
     var activePinDataset = domActivePin ? domActivePin.getAttribute(pin.ordinary.DATASET_NAME) : null;
 
 
-    while (domElement !== window.mapData.domPinMap) {
+    while (domElement !== domPinMap) {
       elementDataset = domElement.getAttribute(pin.ordinary.DATASET_NAME);
 
       if (elementDataset && elementDataset !== activePinDataset) {

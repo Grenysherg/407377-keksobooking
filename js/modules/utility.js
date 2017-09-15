@@ -32,6 +32,7 @@
   window.utility.isArrayInOtherArray = function (array, otherArray) {
     var otherArrayElementStore = this.turnArrayIntoObject(otherArray); /* otherArrayElementStore - это объект, а не массив */
 
+
     return !array.some(function (it) {
       return !otherArrayElementStore[it];
     });

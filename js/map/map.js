@@ -5,7 +5,7 @@
 
   var advertStore = {};
 
-  var domCardClose = window.mapData.domCard.querySelector('.dialog__close');
+  var domCardClose = window.card.getDomElement().querySelector('.dialog__close');
 
 
   var openCard = function (domOrdinaryPin, advertStoreKey) {
@@ -65,8 +65,8 @@
   };
 
   var addPinMapEvents = function () {
-    window.mapData.domPinMap.addEventListener('click', onDomPinMapClick);
-    window.mapData.domPinMap.addEventListener('keydown', onDomPinMapEnterPress);
+    window.pin.getDomMap().addEventListener('click', onDomPinMapClick);
+    window.pin.getDomMap().addEventListener('keydown', onDomPinMapEnterPress);
   };
 
   var addCardCloseEvents = function () {
