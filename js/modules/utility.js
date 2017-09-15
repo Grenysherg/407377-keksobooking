@@ -4,7 +4,7 @@
   var keyCode = {};
   keyCode.ENTER = 13;
   keyCode.ESC = 27;
-  
+
 
   window.utility = {};
 
