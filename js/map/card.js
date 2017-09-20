@@ -2,6 +2,8 @@
 
 (function () {
   var domCard = document.querySelector('#offer-dialog');
+  var domCardAvatar = domCard.querySelector('.dialog__title img');
+  var domCardPanel = domCard.querySelector('.dialog__panel');
   var domCardTemplate = document.querySelector('#lodge-template').content;
 
 
@@ -57,25 +59,25 @@
   };
 
   window.card.render = function (advert) {
-    var domCardPanel = domCard.querySelector('.dialog__panel');
-    var domCardNewPanel = domCardTemplate.cloneNode(true);
+    var domCardPanelContent = domCardTemplate.cloneNode(true);
 
 
-    domCard.querySelector('.dialog__title img').setAttribute('src', advert.author.avatar);
+    domCardAvatar.setAttribute('src', advert.author.avatar);
 
-    domCardNewPanel.querySelector('.lodge__title').textContent = advert.offer.title;
-    domCardNewPanel.querySelector('.lodge__address').textContent = advert.offer.address;
-    domCardNewPanel.querySelector('.lodge__price').textContent = advert.offer.price + window.data.sign.RUBLE + '/ночь';
-    domCardNewPanel.querySelector('.lodge__type').textContent = window.data.advert.type[advert.offer.type].RUS_VALUE;
-    domCardNewPanel.querySelector('.lodge__rooms-and-guests').textContent
+    domCardPanelContent.querySelector('.lodge__title').textContent = advert.offer.title;
+    domCardPanelContent.querySelector('.lodge__address').textContent = advert.offer.address;
+    domCardPanelContent.querySelector('.lodge__price').textContent = advert.offer.price + window.data.sign.RUBLE + '/ночь';
+    domCardPanelContent.querySelector('.lodge__type').textContent = window.data.advert.type[advert.offer.type].RUS_VALUE;
+    domCardPanelContent.querySelector('.lodge__rooms-and-guests').textContent
       = takeGuestAndRoomString(advert.offer.guests, advert.offer.rooms);
-    domCardNewPanel.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin
+    domCardPanelContent.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advert.offer.checkin
       + ', выезд до ' + advert.offer.checkout;
-    domCardNewPanel.querySelector('.lodge__features').appendChild(renderFeatures(advert.offer.features));
-    domCardNewPanel.querySelector('.lodge__description').textContent = advert.offer.description;
-    domCardNewPanel.querySelector('.lodge__photos').appendChild(renderPreviewPhotos(advert.offer.photos));
+    domCardPanelContent.querySelector('.lodge__features').appendChild(renderFeatures(advert.offer.features));
+    domCardPanelContent.querySelector('.lodge__description').textContent = advert.offer.description;
+    domCardPanelContent.querySelector('.lodge__photos').appendChild(renderPreviewPhotos(advert.offer.photos));
 
-    domCard.replaceChild(domCardNewPanel, domCardPanel);
+    domCardPanel.innerHTML = '';
+    domCardPanel.appendChild(domCardPanelContent);
   };
 
   window.card.addVisibilityState = function () {

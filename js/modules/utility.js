@@ -30,24 +30,9 @@
   };
 
   window.utility.isArrayInOtherArray = function (array, otherArray) {
-    var otherArrayElementStore = this.turnArrayIntoObject(otherArray); /* otherArrayElementStore - это объект, а не массив */
-
-
-    return !array.some(function (it) {
-      return !otherArrayElementStore[it];
+    return array.every(function (it) {
+      return otherArray.indexOf(it) !== -1;
     });
-  };
-
-  window.utility.turnArrayIntoObject = function (array) {
-    var object = {};
-
-
-    array.forEach(function (it) {
-      object[it] = true;
-    });
-
-
-    return object;
   };
 
   window.utility.renderImg = function (img) {
