@@ -388,7 +388,7 @@
       addPhoto(imgFiles.length);
 
       imgFiles.forEach(function (it) {
-        var domPhotoPreviewContainer = renderPhotoPreviewContainer(false).children[0];
+        var domPhotoPreviewContainer = renderPhotoPreviewContainer(false).childNodes[0];
 
 
         domPhoto.replaceChild(domPhotoPreviewContainer, domPhoto.querySelector('.form__photo:empty'));
