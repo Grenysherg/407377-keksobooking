@@ -115,7 +115,7 @@
       <div class="notice__photo">
         <div class="notice__preview"><img src="img/muffin.png" alt="User Avatar" width="40" height="44"></div>
         <div class="drop-zone  upload">
-          <input type="file" title=" ">
+          <input type="file">
           <span class="drop-zone">Загрузите или&nbsp;перетащите сюда фото</span>
         </div>
         <p class="notice__info">Заполните все обязательные поля, назначьте цену, загрузите фотографии. Придумайте интересное описание. Оно сделает объявление более живым и привлекательным. Получившееся объявление должно давать гостям полное представление о вашем жилье.</p>
@@ -228,7 +228,7 @@
             <label>Фотографии жилья</label>
             <div class="form__photo-container">
               <div class="drop-zone upload">
-                <input type="file" title=" " multiple>
+                <input type="file" multiple>
                 <span class="drop-zone">Загрузите или&nbsp;перетащите сюда фото</span>
               </div>
               <div class="form__photo"></div>
@@ -277,17 +277,15 @@
 </template>
 
 <template id="lodge-template" class="hidden">
-  <div class="dialog__panel">
-    <h3 class="lodge__title"></h3>
-    <p class="lodge__address"></p>
-    <h3 class="lodge__price"></h3>
-    <h4 class="lodge__type"></h4>
-    <p class="lodge__rooms-and-guests"></p>
-    <p class="lodge__checkin-time"></p>
-    <div class="lodge__features"></div>
-    <p class="lodge__description"></p>
-    <div class="lodge__photos"></div>
-  </div>
+  <h3 class="lodge__title"></h3>
+  <p class="lodge__address"></p>
+  <h3 class="lodge__price"></h3>
+  <h4 class="lodge__type"></h4>
+  <p class="lodge__rooms-and-guests"></p>
+  <p class="lodge__checkin-time"></p>
+  <div class="lodge__features"></div>
+  <p class="lodge__description"></p>
+  <div class="lodge__photos"></div>
 </template>
 
 <template id="photo-template" class="hidden">

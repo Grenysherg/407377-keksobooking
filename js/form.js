@@ -7,6 +7,15 @@
 
   var FILE_IMG_SORT = 'img';
 
+  var PHOTO_PREVIEW_CONTAINERS_FIRST_ELEMENT_INDEX = 1;
+
+  var VALUE_MISSING_STRING = 'Обязательное поле';
+
+  var TITLE_MIN_LENGTH_ERROR_STRING = 'Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH;
+  var TITLE_MAX_LENGTH_ERROR_STRING = 'Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH;
+
+  var MAX_PRICE_ERROR_STRING = 'Максимально возможная цена: ' + window.data.advert.price.MAX;
+
 
   var domAvatarInput = document.querySelector('.notice__photo input[type="file"]');
   var domAvatarPreview = document.querySelector('.notice__photo img');
@@ -24,6 +33,8 @@
   var domPhoto = domForm.querySelector('.form__photo-container');
   var domPhotoInput = domPhoto.querySelector('input[type="file"]');
   var domPhotoPreviewTemplate = document.querySelector('#photo-template').content;
+
+  var photoPreviewContainersElementAmount = domPhoto.children.length - 1;
 
 
   var createLocationString = function (coordinateXValue, coordinateYValue) {
@@ -46,6 +57,20 @@
     domField.style.borderColor = '#d9d9d3';
   };
 
+  var setDomFieldErrorMessage = function (domField, string) {
+    setDomFieldErrorColor(domField);
+
+    domField.setCustomValidity(string);
+    domField.setAttribute('title', string);
+  };
+
+  var removeDomFieldErrorMessage = function (domField) {
+    setDomFieldValidColor(domField);
+
+    domField.setCustomValidity('');
+    domField.removeAttribute('title');
+  };
+
   var renderSelectOption = function (value, text) {
     var domElement = document.createElement('option');
 
@@ -55,19 +80,6 @@
 
 
     return domElement;
-  };
-
-  var onDomFieldInvalid = function (domField) {
-    if (!domField.validity.valid) {
-      setDomFieldErrorColor(domField);
-
-      if (domField.validity.valueMissing) {
-        domField.setCustomValidity('Обязательное поле');
-      }
-    } else {
-      setDomFieldValidColor(domField);
-      domField.setCustomValidity('');
-    }
   };
 
   var addFormEvents = function () {
@@ -96,6 +108,7 @@
 
   var resetAvatarPreview = function () {
     domAvatarPreview.setAttribute('src', AVATAR_PREVIEW_DEFAULT_SRC);
+    domAvatarInput.value = '';
   };
 
   var onAvatarInputChange = function () {
@@ -114,18 +127,24 @@
   var onDomTitleInput = function (evt) {
     var target = evt.target;
 
-    if (target.value.length < window.data.advert.title.MIN_LENGTH) {
-      domTitleInput.setCustomValidity('Минимально возможное количество символов: ' + window.data.advert.title.MIN_LENGTH);
+
+    if (!target.value) {
+      setDomFieldErrorMessage(domTitleInput, VALUE_MISSING_STRING);
+    } else if (target.value.length < window.data.advert.title.MIN_LENGTH) {
+      setDomFieldErrorMessage(domTitleInput, TITLE_MIN_LENGTH_ERROR_STRING);
     } else if (target.value.length > window.data.advert.title.MAX_LENGTH) {
-      domTitleInput.setCustomValidity('Максимально возможное количество символов: ' + window.data.advert.title.MAX_LENGTH);
+      setDomFieldErrorMessage(domTitleInput, TITLE_MAX_LENGTH_ERROR_STRING);
     } else {
-      setDomFieldValidColor(domTitleInput);
-      domTitleInput.setCustomValidity('');
+      removeDomFieldErrorMessage(domTitleInput);
     }
   };
 
   var onDomTitleInvalid = function () {
-    onDomFieldInvalid(domTitleInput);
+    if (!domTitleInput.validity.valid) {
+      if (domTitleInput.validity.valueMissing) {
+        setDomFieldErrorMessage(domTitleInput, VALUE_MISSING_STRING);
+      }
+    }
   };
 
 
@@ -153,29 +172,41 @@
   var minPrices = getMinPrices();
 
 
-  var onDomTypeChange = function () {
-    window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setDomFieldMinNumber);
+  var getMinPriceErrorString = function (lodgeTypeValue, minPriceNumber) {
+    return 'Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + minPriceNumber;
   };
 
-  var onDomPriceInput = function (evt) {
-    var target = evt.target;
-
+  var checkDomPriceInput = function (valueNumber) {
     var currentMinPrice = Number(domPriceInput.getAttribute('min'));
     var lodgeTypeValue = window.data.advert.type[lodgeTypes[minPrices.indexOf(currentMinPrice)]].RUS_VALUE;
 
-
-    if (Number(target.value) < currentMinPrice) {
-      domPriceInput.setCustomValidity('Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + currentMinPrice);
-    } else if (Number(target.value) > window.data.advert.price.MAX) {
-      domPriceInput.setCustomValidity('Максимально возможная цена: ' + window.data.advert.price.MAX);
+    if (valueNumber === null) {
+      setDomFieldErrorMessage(domPriceInput, VALUE_MISSING_STRING);
+    } else if (valueNumber < currentMinPrice) {
+      setDomFieldErrorMessage(domPriceInput, getMinPriceErrorString(lodgeTypeValue, currentMinPrice));
+    } else if (valueNumber > window.data.advert.price.MAX) {
+      setDomFieldErrorMessage(domPriceInput, MAX_PRICE_ERROR_STRING);
     } else {
-      setDomFieldValidColor(domPriceInput);
-      domPriceInput.setCustomValidity('');
+      removeDomFieldErrorMessage(domPriceInput);
     }
   };
 
+  var onDomTypeChange = function () {
+    window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setDomFieldMinNumber);
+
+    checkDomPriceInput(Number(domPriceInput.value));
+  };
+
+  var onDomPriceInput = function (evt) {
+    checkDomPriceInput(evt.target.value ? Number(evt.target.value) : null);
+  };
+
   var onDomPriceInvalid = function () {
-    onDomFieldInvalid(domPriceInput);
+    if (!domPriceInput.validity.valid) {
+      if (domPriceInput.validity.valueMissing) {
+        setDomFieldErrorMessage(domPriceInput, VALUE_MISSING_STRING);
+      }
+    }
   };
 
 
@@ -252,6 +283,8 @@
     Array.from(domPhotoPreviewCompletedContainers).forEach(function (it) {
       it.innerHTML = '';
     });
+
+    domPhotoInput.value = '';
   };
 
   var renderPhotoPreviewContainer = function (isContainerEmpty) {
@@ -290,9 +323,6 @@
   var addPhoto = function (addedPhotoAmount) {
     var fragment = document.createDocumentFragment();
 
-    var photoPreviewContainersElementAmount = domPhoto.children.length - 1;
-    var photoPreviewContainersFirstElementIndex = 1;
-
     var emptyContainersLength = domPhoto.querySelectorAll('.form__photo:empty').length;
     var newEmptyContainersLength = 0;
 
@@ -303,9 +333,9 @@
       fragment.appendChild(renderPhotoPreviewEmptyContainers(newEmptyContainersLength));
     }
 
-    while (domPhoto.children[photoPreviewContainersFirstElementIndex].children.length
+    while (domPhoto.children[PHOTO_PREVIEW_CONTAINERS_FIRST_ELEMENT_INDEX].children.length
         && fragment.children.length - newEmptyContainersLength < photoPreviewContainersElementAmount - addedPhotoAmount) {
-      fragment.appendChild(domPhoto.children[photoPreviewContainersFirstElementIndex]);
+      fragment.appendChild(domPhoto.children[PHOTO_PREVIEW_CONTAINERS_FIRST_ELEMENT_INDEX]);
     }
 
     removePhotoPreviewCompletedContainers();
@@ -350,24 +380,24 @@
       }
     });
 
-    imgFiles = imgFiles.length < PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT
-      ? imgFiles
-      : imgFiles.slice(0, PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT);
+    if (imgFiles.length) {
+      imgFiles = imgFiles.length < PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT
+        ? imgFiles
+        : imgFiles.slice(0, PHOTO_PREVIEW_CONTAINERS_ELEMENT_MAX_AMOUNT);
 
-    addPhoto(imgFiles.length);
+      addPhoto(imgFiles.length);
 
-    imgFiles.forEach(function (it) {
-      var domPhotoPreviewContainer = renderPhotoPreviewContainer(false).children[0];
+      imgFiles.forEach(function (it) {
+        var domPhotoPreviewContainer = renderPhotoPreviewContainer(false).children[0];
 
 
-      domPhoto.replaceChild(domPhotoPreviewContainer, domPhoto.querySelector('.form__photo:empty'));
+        domPhoto.replaceChild(domPhotoPreviewContainer, domPhoto.querySelector('.form__photo:empty'));
 
-      domPhotoPreviewContainer.querySelector('.cross').addEventListener('click', onCrossClick);
+        domPhotoPreviewContainer.querySelector('.cross').addEventListener('click', onCrossClick);
 
-      window.file.uploadImgPreview(it, domPhotoPreviewContainer.querySelector('img'));
-    });
-
-    domPhotoInput.value = '';
+        window.file.uploadImgPreview(it, domPhotoPreviewContainer.querySelector('img'));
+      });
+    }
   };
 
 
