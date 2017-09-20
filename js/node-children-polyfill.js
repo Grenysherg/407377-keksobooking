@@ -7,14 +7,16 @@
     Object.defineProperty(constructor.prototype, 'children', {
       get: function () {
         var i = 0;
-        var node = this.childNodes;
         var nodes = this.childNodes;
+        var node = nodes[i++];
         var children = [];
 
-        while (node = nodes[i++]) {
+        while (node) {
           if (node.nodeType === 1) {
             children.push(node);
           }
+
+          node = nodes[i++];
         }
 
         return children;
