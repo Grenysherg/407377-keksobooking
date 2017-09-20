@@ -176,7 +176,7 @@
     return 'Для типа жилья "' + lodgeTypeValue + '" минимально возможная цена: ' + minPriceNumber;
   };
 
-  var checkDomPriceInput = function (valueNumber) {
+  var checkDomPriceInputValidation = function (valueNumber) {
     var currentMinPrice = Number(domPriceInput.getAttribute('min'));
     var lodgeTypeValue = window.data.advert.type[lodgeTypes[minPrices.indexOf(currentMinPrice)]].RUS_VALUE;
 
@@ -194,11 +194,11 @@
   var onDomTypeChange = function () {
     window.synchronizeDomFields(domTypeSelect, domPriceInput, lodgeTypes, minPrices, setDomFieldMinNumber);
 
-    checkDomPriceInput(Number(domPriceInput.value));
+    checkDomPriceInputValidation(Number(domPriceInput.value));
   };
 
   var onDomPriceInput = function (evt) {
-    checkDomPriceInput(evt.target.value ? Number(evt.target.value) : null);
+    checkDomPriceInputValidation(evt.target.value ? Number(evt.target.value) : null);
   };
 
   var onDomPriceInvalid = function () {
